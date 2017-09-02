@@ -1,9 +1,7 @@
+import { ObservableArray } from './observable-array';
 import { Component, OnInit } from '@angular/core';
 
-import { EntitySet } from './observable-array';
-
-// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+import { EntitySet } from './entity-set';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +13,11 @@ export class AppComponent implements OnInit {
 
   foods = ['Bacon', 'Lettuce', 'Tomatoes'];
   foodImmut = ['Bacon', 'Lettuce', 'Tomatoes'];
-  foodEntities = new EntitySet('Bacon', 'Lettuce', 'Tomatoes');
+  foodObs: ObservableArray<string>;
 
   ngOnInit() {
+    this.foodObs = ObservableArray.create<string>();
+    this.foodObs.push('Bacon', 'Lettuce', 'Tomatoes');
   }
 
   addFood(food: string, option: number) {
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
         this.foodImmut = [...this.foodImmut, food];
         break;
       case 3:
-        this.foodEntities.add(food);
+        this.foodObs.add(food);
         break;
     }
   }

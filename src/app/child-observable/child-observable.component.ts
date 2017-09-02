@@ -1,7 +1,8 @@
+import { ObservableArray } from '../observable-array';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { EntitySet } from '../observable-array';
+import { EntitySet } from '../entity-set';
 
 @Component({
   selector: 'app-child-observable',
@@ -11,7 +12,7 @@ import { EntitySet } from '../observable-array';
 })
 export class ChildObservableComponent implements OnInit {
 
-  @Input() data: EntitySet<string>;
+  @Input() data: ObservableArray<string>;
   listener: BehaviorSubject<string[]>;
 
   constructor(private cd: ChangeDetectorRef) {
@@ -19,7 +20,7 @@ export class ChildObservableComponent implements OnInit {
 
   ngOnInit() {
     if (this.data) {
-      this.listener = new BehaviorSubject(this.data.items);
+      this.listener = new BehaviorSubject(this.data);
       this.data.listeners.push(this.listener);
 
       this.listener.subscribe(foods => {
