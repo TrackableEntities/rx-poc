@@ -4,7 +4,7 @@ import { Food } from '../food';
 import { FoodTrackingContext } from '../food-tracking-context';
 import { TrackingState } from './trackable';
 
-fdescribe('TrackingContext', () => {
+describe('TrackingContext', () => {
 
   let foodContext: FoodTrackingContext;
 
@@ -81,6 +81,37 @@ fdescribe('TrackingContext', () => {
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
+    done();
+  });
+
+  it('should cache Deleted entities when tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
+    const food = foodContext.Food.items[0];
+
+    // Act
+    foodContext.Food.remove(food);
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Deleted);
+    expect(foodContext.deletedEntities.size).toEqual(1);
+    done();
+  });
+
+  it('should clear Deleted entities when not tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
+    const food = foodContext.Food.items[0];
+
+    // Act
+    foodContext.Food.remove(food);
+    foodContext.tracking = false;
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Deleted);
+    expect(foodContext.deletedEntities.size).toEqual(0);
     done();
   });
 

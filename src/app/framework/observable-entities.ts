@@ -16,11 +16,11 @@ export class ObservableEntities<TEntity> {
     }
 
     remove(...items: TEntity[]): void {
+        this.removeListeners.forEach(listener => listener.next(items));
         if (items.length === 0 || this.items.length === 0) { return; }
         const index = this.items.indexOf(items[0]);
         if (index >= 0) {
             this.items.splice(index, items.length);
-            this.removeListeners.forEach(listener => listener.next(items));
         }
     }
 }

@@ -11,6 +11,8 @@ export abstract class TrackingContext {
 
     protected entitySets: ObservableEntities<ITrackable>[] = [];
 
+    deletedEntities = new Set<ITrackable>();
+
     constructor() {
     }
 
@@ -35,14 +37,16 @@ export abstract class TrackingContext {
                 const removeIndex = entities.removeListeners.indexOf(this._removeListener);
                 if (removeIndex < 0) {
                     this._removeListener.subscribe(items => {
-                        items.forEach(item => item.TrackingState = TrackingState.Deleted);
+                        items.forEach(item => {
+                            item.TrackingState = TrackingState.Deleted;
+                            this.deletedEntities.add(item);
+                        });
                     });
                     entities.removeListeners.push(this._removeListener);
                 }
             });
         } else {
             this.entitySets.forEach(entities => {
-                // if (entities.addListeners.length === 0 || entities.addListeners.length === 0) { return; }
                 const addIndex = entities.addListeners.indexOf(this._addListener);
                 if (addIndex >= 0) {
                     this._addListener.unsubscribe();
@@ -51,6 +55,7 @@ export abstract class TrackingContext {
                 const removeIndex = entities.removeListeners.indexOf(this._removeListener);
                 if (removeIndex >= 0) {
                     this._removeListener.unsubscribe();
+                    this.deletedEntities.clear();
                     entities.removeListeners.splice(addIndex, entities.removeListeners.length);
                 }
             });
