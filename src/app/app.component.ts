@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { EntitySet } from './observable-array';
+import { ObservableEntities } from './observable-entities';
 
 // import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
 
   foods = ['Bacon', 'Lettuce', 'Tomatoes'];
   foodImmut = ['Bacon', 'Lettuce', 'Tomatoes'];
-  foodEntities = new EntitySet('Bacon', 'Lettuce', 'Tomatoes');
+  foodEntities = new ObservableEntities('Bacon', 'Lettuce', 'Tomatoes');
 
   ngOnInit() {
   }

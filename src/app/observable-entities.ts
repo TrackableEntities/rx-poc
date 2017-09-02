@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-export class EntitySet<TEntity> {
+export class ObservableEntities<TEntity> {
 
     items: Array<TEntity> = [];
     listeners: BehaviorSubject<TEntity[]>[] = [];
