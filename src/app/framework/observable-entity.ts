@@ -1,8 +1,10 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 export class ObservableEntity {
 
-    listener: BehaviorSubject<string>;
+    listener: Subject<string>;
+
+    constructor() { }
 
     notify(property: string) {
       this.listener.next(property);

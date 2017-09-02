@@ -1,9 +1,9 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 export class ObservableEntities<TEntity> {
 
     items: Array<TEntity> = [];
-    listeners: BehaviorSubject<TEntity[]>[] = [];
+    listeners: Subject<TEntity[]>[] = [];
 
     constructor(...items: TEntity[]) {
         this.items = items;

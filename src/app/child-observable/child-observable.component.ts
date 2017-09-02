@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
-import { ObservableEntities } from '../observable-entities';
+import { ObservableEntities } from '../framework/observable-entities';
 
 @Component({
   selector: 'app-child-observable',
@@ -12,14 +12,14 @@ import { ObservableEntities } from '../observable-entities';
 export class ChildObservableComponent implements OnInit {
 
   @Input() data: ObservableEntities<string>;
-  listener: BehaviorSubject<string[]>;
+  listener: Subject<string[]>;
 
   constructor(private cd: ChangeDetectorRef) {
   }
 
   ngOnInit() {
     if (this.data) {
-      this.listener = new BehaviorSubject(this.data.items);
+      this.listener = new Subject();
       this.data.listeners.push(this.listener);
 
       this.listener.subscribe(foods => {

@@ -1,15 +1,31 @@
-import { TestBed, async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
+import { ChildDefaultComponent } from './child-default/child-default.component';
+import { ChildImmutableComponent } from './child-immutable/child-immutable.component';
+import { ChildObservableComponent } from './child-observable/child-observable.component';
+import { ObservableEntities } from './framework/observable-entities';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        ChildDefaultComponent,
+        ChildImmutableComponent,
+        ChildObservableComponent
       ],
     }).compileComponents();
   }));
+
+  beforeEach(() => {
+    const childDef = TestBed.createComponent(ChildDefaultComponent).componentInstance;
+    childDef.data = [];
+    const childImmut = TestBed.createComponent(ChildImmutableComponent).componentInstance;
+    childImmut.data = [];
+    const childDObs = TestBed.createComponent(ChildObservableComponent).componentInstance;
+    childDObs.data = new ObservableEntities<string>();
+  });
 
   it('should create the app', async(() => {
     const fixture = TestBed.createComponent(AppComponent);

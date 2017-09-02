@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ObservableEntities } from './observable-entities';
-
-// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+import { ObservableEntities } from './framework/observable-entities';
 
 @Component({
   selector: 'app-root',
