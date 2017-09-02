@@ -2,7 +2,7 @@ import { Subject } from 'rxjs/Subject';
 
 export class ObservableEntity {
 
-    listener: Subject<string>;
+    listener = new Subject<string>();
 
     constructor() { }
 

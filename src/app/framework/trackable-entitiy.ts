@@ -4,5 +4,5 @@ import { ITrackable, TrackingState } from './trackable';
 export class TrackableEntity extends ObservableEntity implements ITrackable {
 
   public TrackingState = TrackingState.Unchanged;
-  public ModifiedProperties: string[] = [];
+  public ModifiedProperties = new Set<string>();
 }

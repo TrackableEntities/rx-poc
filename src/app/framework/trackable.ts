@@ -1,6 +1,6 @@
 export interface ITrackable {
     TrackingState: TrackingState;
-    ModifiedProperties: string[];
+    ModifiedProperties: Set<string>;
 }
 
 export enum TrackingState {

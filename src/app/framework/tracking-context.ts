@@ -2,14 +2,15 @@ import { Subject } from 'rxjs/Subject';
 
 import { ObservableEntities } from './observable-entities';
 import { ITrackable, TrackingState } from './trackable';
+import { TrackableEntity } from './trackable-entitiy';
 
 export abstract class TrackingContext {
 
     private _tracking: boolean;
-    private _addListener = new Subject<ITrackable[]>();
-    private _removeListener = new Subject<ITrackable[]>();
+    private _addListener = new Subject<TrackableEntity[]>();
+    private _removeListener = new Subject<TrackableEntity[]>();
 
-    protected entitySets: ObservableEntities<ITrackable>[] = [];
+    protected entitySets: ObservableEntities<TrackableEntity>[] = [];
 
     deletedEntities = new Set<ITrackable>();
 
@@ -44,6 +45,14 @@ export abstract class TrackingContext {
                     });
                     entities.removeListeners.push(this._removeListener);
                 }
+                entities.items.forEach(item => {
+                    item.listener.subscribe(prop => {
+                        if (this.tracking === true) {
+                            item.TrackingState = TrackingState.Modified;
+                            item.ModifiedProperties.add(prop);
+                        }
+                    });
+                });
             });
         } else {
             this.entitySets.forEach(entities => {

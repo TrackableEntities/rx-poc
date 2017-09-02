@@ -134,4 +134,51 @@ describe('TrackingContext', () => {
     expect(props[1]).toEqual('price');
     done();
   });
+
+  it('should set entity TrackingState to Modified when tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
+    const food = foodContext.Food.items[0];
+
+    // Act
+    food.desc = 'Peas';
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Modified);
+    done();
+  });
+
+  it('should not set entity TrackingState to Modified when not tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
+    const food = foodContext.Food.items[0];
+
+    // Act
+    foodContext.tracking = false;
+    food.desc = 'Peas';
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Unchanged);
+    done();
+  });
+
+  it('should add to entity ModifiedProperties when tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
+    const food = foodContext.Food.items[0];
+
+    // Act
+    food.desc = 'Peas';
+    food.price = 5;
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Modified);
+    expect(food.ModifiedProperties.size).toEqual(2);
+    expect(food.ModifiedProperties.has('desc')).toBeTruthy();
+    expect(food.ModifiedProperties.has('price')).toBeTruthy();
+    done();
+  });
 });
