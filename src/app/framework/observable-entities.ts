@@ -3,7 +3,8 @@ import { Subject } from 'rxjs/Subject';
 export class ObservableEntities<TEntity> {
 
     items: Array<TEntity> = [];
-    listeners: Subject<TEntity[]>[] = [];
+    addListeners: Subject<TEntity[]>[] = [];
+    removeListeners: Subject<TEntity[]>[] = [];
 
     constructor(...items: TEntity[]) {
         this.items = items;
@@ -11,7 +12,7 @@ export class ObservableEntities<TEntity> {
 
     add(...items: TEntity[]): void {
         this.items.push(...items);
-        this.listeners.forEach(listener => listener.next(items));
+        this.addListeners.forEach(listener => listener.next(items));
     }
 
     remove(...items: TEntity[]): void {
@@ -19,7 +20,7 @@ export class ObservableEntities<TEntity> {
         const index = this.items.indexOf(items[0]);
         if (index >= 0) {
             this.items.splice(index, items.length);
-            this.listeners.forEach(listener => listener.next(items));
+            this.removeListeners.forEach(listener => listener.next(items));
         }
     }
 }

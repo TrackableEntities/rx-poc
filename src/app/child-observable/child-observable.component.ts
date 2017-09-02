@@ -20,7 +20,7 @@ export class ChildObservableComponent implements OnInit {
   ngOnInit() {
     if (this.data) {
       this.listener = new Subject();
-      this.data.listeners.push(this.listener);
+      this.data.addListeners.push(this.listener);
 
       this.listener.subscribe(foods => {
         this.cd.markForCheck();

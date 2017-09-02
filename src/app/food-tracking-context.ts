@@ -5,4 +5,9 @@ import { TrackingContext } from './framework/tracking-context';
 export class FoodTrackingContext extends TrackingContext {
 
     Food = new ObservableEntities<Food>();
+
+    constructor() {
+        super();
+        this.entitySets.push(this.Food);
+    }
 }

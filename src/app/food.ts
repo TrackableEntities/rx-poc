@@ -1,10 +1,6 @@
-import { ITrackable, TrackingState } from './framework/trackable';
-import { ObservableEntity } from './framework/observable-entity';
+import { TrackableEntity } from './framework/trackable-entitiy';
 
-export class Food extends ObservableEntity implements ITrackable {
-
-  public TrackingState: TrackingState;
-  public ModifiedProperties: string[];
+export class Food extends TrackableEntity {
 
   private _desc: string;
   private _price: number;

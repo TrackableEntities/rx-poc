@@ -2,8 +2,9 @@ import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
 import { FoodTrackingContext } from '../food-tracking-context';
+import { TrackingState } from './trackable';
 
-describe('Observable Entities', () => {
+fdescribe('TrackingContext', () => {
 
   let foodContext: FoodTrackingContext;
 
@@ -17,43 +18,69 @@ describe('Observable Entities', () => {
     foodContext.Food.items = foods;
   });
 
+  it('should be created', () => {
+    expect(foodContext).toBeTruthy();
+  });
+
   it('should contain items', () => {
     expect(foodContext.Food.items.length).toBe(3);
   });
 
-  it('should notify added', (done) => {
+  it('should set entity TrackingState to Added when tracking', (done) => {
 
     // Arrange
-    const listener = new Subject<Food[]>();
+    foodContext.tracking = true;
     const food = new Food('Carrots', 4);
-    let added: Food[];
-    listener.subscribe(items => added = items);
-    foodContext.Food.addListeners.push(listener);
 
     // Act
     foodContext.Food.add(food);
 
     // Assert
-    expect(added.length).toEqual(1);
-    expect(added[0]).toBe(food);
+    expect(food.TrackingState).toEqual(TrackingState.Added);
     done();
   });
 
-  it('should notify removed', (done) => {
+  it('should not set entity TrackingState to Added when not tracking', (done) => {
 
     // Arrange
-    const listener = new Subject<Food[]>();
+    foodContext.tracking = true;
+    const food = new Food('Carrots', 4);
+
+    // Act
+    foodContext.tracking = false;
+    foodContext.Food.add(food);
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Unchanged);
+    done();
+  });
+
+  it('should set entity TrackingState to Deleted when tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
     const food = foodContext.Food.items[0];
-    let removed: Food[];
-    listener.subscribe(items => removed = items);
-    foodContext.Food.removeListeners.push(listener);
 
     // Act
     foodContext.Food.remove(food);
 
     // Assert
-    expect(removed.length).toEqual(1);
-    expect(removed[0]).toBe(food);
+    expect(food.TrackingState).toEqual(TrackingState.Deleted);
+    done();
+  });
+
+  it('should not set entity TrackingState to Deleted when not tracking', (done) => {
+
+    // Arrange
+    foodContext.tracking = true;
+    const food = foodContext.Food.items[0];
+
+    // Act
+    foodContext.tracking = false;
+    foodContext.Food.remove(food);
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Unchanged);
     done();
   });
 
