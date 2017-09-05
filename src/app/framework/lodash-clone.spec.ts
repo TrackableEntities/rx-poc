@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { MockNorthwind } from '../northwind/mock-northwind';
 import { Category } from '../northwind/category';
 
-fdescribe('Lodash CloneDeep', () => {
+describe('Lodash CloneDeep', () => {
 
   const northwind = new MockNorthwind();
 
