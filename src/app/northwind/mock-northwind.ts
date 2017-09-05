@@ -15,10 +15,10 @@ export class MockNorthwind {
 
   Products = [
     { productId: 1, productName: 'Chai', unitPrice: 10, categoryId: 1, category: this.Categories[0] } as Product,
-    { productId: 1, productName: 'Chang', unitPrice: 20, categoryId: 1, category: this.Categories[0] } as Product,
-    { productId: 1, productName: 'Aniseed Syrup', unitPrice: 30, categoryId: 2, category: this.Categories[1] } as Product,
-    { productId: 1, productName: 'Chef Anton\'s Cajun Seasoning', unitPrice: 40, categoryId: 2, category: this.Categories[1] } as Product,
-    { productId: 1, productName: 'Chef Anton\'s Gumbo Mix', unitPrice: 50, categoryId: 2, category: this.Categories[1] } as Product,
+    { productId: 2, productName: 'Chang', unitPrice: 20, categoryId: 1, category: this.Categories[0] } as Product,
+    { productId: 3, productName: 'Aniseed Syrup', unitPrice: 30, categoryId: 2, category: this.Categories[1] } as Product,
+    { productId: 4, productName: 'Chef Anton\'s Cajun Seasoning', unitPrice: 40, categoryId: 2, category: this.Categories[1] } as Product,
+    { productId: 5, productName: 'Chef Anton\'s Gumbo Mix', unitPrice: 50, categoryId: 2, category: this.Categories[1] } as Product,
   ];
 
   constructor() {
