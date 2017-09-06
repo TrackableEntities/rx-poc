@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 
-import { ObservableEntities } from './observable-entities';
+import { ObservableCollection } from './observable-collection';
 import { ITrackable, TrackingState } from './trackable';
 import { TrackableEntity } from './trackable-entitiy';
 
@@ -10,7 +10,7 @@ export abstract class TrackingContext {
     private _addListener = new Subject<TrackableEntity[]>();
     private _removeListener = new Subject<TrackableEntity[]>();
 
-    protected entitySets: ObservableEntities<TrackableEntity>[] = [];
+    protected entitySets: ObservableCollection<TrackableEntity>[] = [];
 
     deletedEntities = new Set<ITrackable>();
 

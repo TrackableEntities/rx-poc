@@ -1,26 +1,30 @@
 import { Subject } from 'rxjs/Subject';
+import * as _ from 'lodash';
 
-export abstract class ObservableProxy<T extends object> {
+export abstract class ObservableProxy {
 
-  private _listener = new Subject<string>();
+  private _updateListeners: Subject<[string, any]>[] = [];
 
   protected constructor() {
   }
 
-  get listener(): Subject<string> {
-    return this._listener;
+  get updateListeners(): Subject<[string, any]>[] {
+    return this._updateListeners;
   }
 
-  protected proxify(item: T): T {
-    const listener = this._listener;
-    const handler: ProxyHandler<T> = {
+  protected proxify<TEntity extends object>(item: TEntity): TEntity {
+    if (!item) {
+      return item;
+    }
+    const updateListeners = this._updateListeners;
+    const setHandler: ProxyHandler<TEntity> = {
       set: (target, property, value) => {
-        if (property.toString() !== 'listener') {
-          listener.next(property.toString());
+        if (target[property] !== value) {
+          updateListeners.forEach(listener => listener.next([property.toString(), value]));
         }
         return true;
       }
     };
-    return new Proxy<T>(item, handler);
+    return new Proxy<TEntity>(item, setHandler);
   }
 }

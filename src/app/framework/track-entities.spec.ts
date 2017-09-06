@@ -4,7 +4,7 @@ import { Food } from '../food';
 import { FoodTrackingContext } from '../food-tracking-context';
 import { TrackingState } from './trackable';
 
-describe('TrackingContext', () => {
+xdescribe('TrackingContext', () => {
 
   let foodContext: FoodTrackingContext;
 

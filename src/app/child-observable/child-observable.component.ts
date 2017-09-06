@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
-import { ObservableEntities } from '../framework/observable-entities';
+import { ObservableCollection } from '../framework/observable-collection';
 
 @Component({
   selector: 'app-child-observable',
@@ -11,7 +11,7 @@ import { ObservableEntities } from '../framework/observable-entities';
 })
 export class ChildObservableComponent implements OnInit {
 
-  @Input() data: ObservableEntities<string>;
+  @Input() data: ObservableCollection<string>;
   listener: Subject<string[]>;
 
   constructor(private cd: ChangeDetectorRef) {
