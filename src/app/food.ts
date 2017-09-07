@@ -1,29 +1,19 @@
+import { ObservableSet } from './framework/observable-set';
 import { TrackableEntity } from './framework/trackable-entitiy';
 
 export class Food extends TrackableEntity {
 
-  private _desc: string;
-  private _price: number;
+  desc: string;
+  price: number;
+  ingredients: ObservableSet<string>;
 
-  constructor(desc: string, price: number) {
+  constructor(desc: string, price: number, ingredients?: string[]) {
     super();
-    this._desc = desc;
-    this._price = price;
-  }
-
-  get desc(): string {
-    return this._desc;
-  }
-  set desc(value: string) {
-    this._desc = value;
-    super.notify('desc');
-  }
-
-  get price(): number {
-    return this._price;
-  }
-  set price(value: number) {
-    this._price = value;
-    super.notify('price');
+    this.desc = desc;
+    this.price = price;
+    if (ingredients) {
+      this.ingredients = new ObservableSet<string>(...ingredients);
+    }
+    return super.proxify(this);
   }
 }

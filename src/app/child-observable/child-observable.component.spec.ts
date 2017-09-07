@@ -1,4 +1,4 @@
-import { ObservableEntities } from '../framework/observable-entities';
+import { ObservableSet } from '../framework/observable-set';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChildObservableComponent } from './child-observable.component';
@@ -17,7 +17,7 @@ describe('ChildObservableComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ChildObservableComponent);
     component = fixture.componentInstance;
-    component.data = new ObservableEntities<string>();
+    component.data = new ObservableSet<string>();
     fixture.detectChanges();
   });
 
