@@ -118,11 +118,11 @@ xdescribe('TrackingContext', () => {
   it('should notify property changed', (done) => {
 
     // Arrange
-    const listener = new Subject<string>();
-    const props: string[] = [];
+    const listener = new Subject<[string, any]>();
+    const props: [string, any][] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
-    food.listener = listener;
+    food.updateListeners.push(listener);
 
     // Act
     food.desc = 'Peas';
@@ -130,8 +130,8 @@ xdescribe('TrackingContext', () => {
 
     // Assert
     expect(props.length).toEqual(2);
-    expect(props[0]).toEqual('desc');
-    expect(props[1]).toEqual('price');
+    expect(props[0][0]).toEqual('desc');
+    expect(props[1][0]).toEqual('price');
     done();
   });
 

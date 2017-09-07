@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 
-import { FoodPoco } from '../food-poco';
+import { Food } from '../food';
 
 describe('Observable Proxies', () => {
 
@@ -8,7 +8,7 @@ describe('Observable Proxies', () => {
 
     // Arrange
     const props: [string, any][] = [];
-    const food = new FoodPoco('Carrots', 4);
+    const food = new Food('Carrots', 4);
     const listener = new Subject<[string, any]>();
     listener.subscribe(prop => props.push([prop[0], prop[1]]));
     food.updateListeners.push(listener);
@@ -30,7 +30,7 @@ describe('Observable Proxies', () => {
 
     // Arrange
     const props: [string, any][] = [];
-    const food = new FoodPoco('Carrots', 4);
+    const food = new Food('Carrots', 4);
     const listener = new Subject<[string, any]>();
     listener.subscribe(prop => props.push([prop[0], prop[1]]));
     food.updateListeners.push(listener);
@@ -48,7 +48,7 @@ describe('Observable Proxies', () => {
 
     // Arrange
     const items: string[] = [];
-    const food = new FoodPoco('Cake', 4, ['Flour', 'Eggs', 'Milk']);
+    const food = new Food('Cake', 4, ['Flour', 'Eggs', 'Milk']);
     const listener = new Subject<any>();
     listener.subscribe(added => items.push(added));
     food.ingredients.addListeners.push(listener);
@@ -66,7 +66,7 @@ describe('Observable Proxies', () => {
 
     // Arrange
     const items: string[] = [];
-    const food = new FoodPoco('Cake', 4, ['Flour', 'Eggs', 'Milk']);
+    const food = new Food('Cake', 4, ['Flour', 'Eggs', 'Milk']);
     const listener = new Subject<any>();
     listener.subscribe(removed => items.push(removed));
     food.ingredients.removeListeners.push(listener);
