@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
 
-export abstract class ObservableProxy {
+export abstract class ObservableEntityProxy {
 
   private _updateListeners: Subject<[string, any]>[] = [];
 

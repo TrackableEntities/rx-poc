@@ -1,6 +1,6 @@
 import { TrackableEntity } from './framework/trackable-entitiy';
 import { ObservableCollection } from './framework/observable-collection';
-import { ObservableProxy } from './framework/observable-proxy';
+import { ObservableEntityProxy } from './framework/observable-entity-proxy';
 
 export class Food extends TrackableEntity {
 
@@ -12,7 +12,9 @@ export class Food extends TrackableEntity {
     super();
     this.desc = desc;
     this.price = price;
-    this.ingredients = new ObservableCollection<string>(...ingredients);
+    if (ingredients) {
+      this.ingredients = new ObservableCollection<string>(...ingredients);
+    }
     return super.proxify(this);
   }
 }

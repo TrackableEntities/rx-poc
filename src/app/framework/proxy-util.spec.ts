@@ -1,4 +1,4 @@
-import { ObservableProxy } from './observable-proxy';
+import { ObservableEntityProxy } from './observable-entity-proxy';
 import { Food } from '../food';
 import { proxify } from './proxy-util';
 
