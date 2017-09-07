@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { ChildDefaultComponent } from './child-default/child-default.component';
 import { ChildImmutableComponent } from './child-immutable/child-immutable.component';
 import { ChildObservableComponent } from './child-observable/child-observable.component';
-import { ObservableCollection } from './framework/observable-collection';
+import { ObservableSet } from './framework/observable-set';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -24,7 +24,7 @@ describe('AppComponent', () => {
     const childImmut = TestBed.createComponent(ChildImmutableComponent).componentInstance;
     childImmut.data = [];
     const childDObs = TestBed.createComponent(ChildObservableComponent).componentInstance;
-    childDObs.data = new ObservableCollection<string>();
+    childDObs.data = new ObservableSet<string>();
   });
 
   it('should create the app', async(() => {

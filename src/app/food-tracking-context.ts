@@ -1,10 +1,10 @@
 import { Food } from './food';
-import { ObservableCollection } from './framework/observable-collection';
+import { ObservableSet } from './framework/observable-set';
 import { TrackingContext } from './framework/tracking-context';
 
 export class FoodTrackingContext extends TrackingContext {
 
-    Food = new ObservableCollection<Food>();
+    Food = new ObservableSet<Food>();
 
     constructor() {
         super();

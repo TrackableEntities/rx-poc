@@ -1,3 +1,5 @@
+import { ObservableSet } from './observable-set';
+import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
@@ -15,7 +17,7 @@ xdescribe('TrackingContext', () => {
       new Food('Lettuce', 2),
       new Food('Tomatoes', 3),
     ];
-    foodContext.Food.items = foods;
+    foodContext.Food = new ObservableSet<Food>(...foods);
   });
 
   it('should be created', () => {
@@ -23,7 +25,7 @@ xdescribe('TrackingContext', () => {
   });
 
   it('should contain items', () => {
-    expect(foodContext.Food.items.length).toBe(3);
+    expect(foodContext.Food.size).toBe(3);
   });
 
   it('should set entity TrackingState to Added when tracking', (done) => {
@@ -59,10 +61,10 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
-    foodContext.Food.remove(food);
+    foodContext.Food.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
@@ -73,11 +75,11 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
     foodContext.tracking = false;
-    foodContext.Food.remove(food);
+    foodContext.Food.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
@@ -88,10 +90,10 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
-    foodContext.Food.remove(food);
+    foodContext.Food.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
@@ -103,10 +105,10 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
-    foodContext.Food.remove(food);
+    foodContext.Food.delete(food);
     foodContext.tracking = false;
 
     // Assert
@@ -139,7 +141,7 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
     food.desc = 'Peas';
@@ -153,7 +155,7 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
     foodContext.tracking = false;
@@ -168,7 +170,7 @@ xdescribe('TrackingContext', () => {
 
     // Arrange
     foodContext.tracking = true;
-    const food = foodContext.Food.items[0];
+    const food = foodContext.Food[0];
 
     // Act
     food.desc = 'Peas';

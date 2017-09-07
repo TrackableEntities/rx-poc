@@ -1,16 +1,16 @@
 import { Subject } from 'rxjs/Subject';
 
-import { ObservableCollection } from './observable-collection';
+import { ObservableSet } from './observable-set';
 import { ITrackable, TrackingState } from './trackable';
 import { TrackableEntity } from './trackable-entitiy';
 
 export abstract class TrackingContext {
 
   private _tracking: boolean;
-  private _addListener = new Subject<TrackableEntity[]>();
-  private _removeListener = new Subject<TrackableEntity[]>();
+  private _addListener = new Subject<TrackableEntity>();
+  private _removeListener = new Subject<TrackableEntity>();
 
-  protected entitySets: ObservableCollection<TrackableEntity>[] = [];
+  protected entitySets: ObservableSet<TrackableEntity>[] = [];
 
   deletedEntities = new Set<ITrackable>();
 
@@ -31,30 +31,19 @@ export abstract class TrackingContext {
         const addIndex = entities.addListeners.indexOf(this._addListener);
         if (addIndex < 0) {
           this._addListener.subscribe(items => {
-            if (items.length === undefined || items.length === 1) {
-              items[0].TrackingState = TrackingState.Added;
-            } else {
-              items.forEach(item => item.TrackingState = TrackingState.Added);
-            }
+            items[0].TrackingState = TrackingState.Added;
           });
           entities.addListeners.push(this._addListener);
         }
         const removeIndex = entities.removeListeners.indexOf(this._removeListener);
         if (removeIndex < 0) {
           this._removeListener.subscribe(items => {
-            if (items.length === undefined || items.length === 1) {
-              items[0].TrackingState = TrackingState.Deleted;
-              this.deletedEntities.add(items[0]);
-            } else {
-              items.forEach(item => {
-                item.TrackingState = TrackingState.Deleted;
-                this.deletedEntities.add(item);
-              });
-            }
+            items[0].TrackingState = TrackingState.Deleted;
+            this.deletedEntities.add(items[0]);
           });
           entities.removeListeners.push(this._removeListener);
         }
-        entities.items.forEach(item => {
+        entities.forEach(item => {
           item.updateListeners.forEach(listener => {
             listener.subscribe(prop => {
               if (this.tracking === true) {

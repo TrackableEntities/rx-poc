@@ -17,12 +17,17 @@ export class ObservableSet<TEntity> extends Set<TEntity> {
     return this._removeListeners;
   }
 
+  addRange(...values: TEntity[]): this {
+    values.forEach(value => this.add(value));
+    return this;
+  }
+
   add(value: TEntity): this {
-    const res = super.add(value);
+    super.add(value);
     if (this._addListeners) {
       this._addListeners.forEach(listener => listener.next(value));
     }
-    return res;
+    return this;
   }
 
   delete(value: TEntity): boolean {
@@ -30,5 +35,10 @@ export class ObservableSet<TEntity> extends Set<TEntity> {
       this._removeListeners.forEach(listener => listener.next(value));
     }
     return super.delete(value);
+  }
+
+  deleteRange(...values: TEntity[]): boolean {
+    values.forEach(value => this.delete(value));
+    return true;
   }
 }

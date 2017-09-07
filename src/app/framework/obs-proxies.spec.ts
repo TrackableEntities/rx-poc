@@ -72,7 +72,7 @@ describe('Observable Proxies', () => {
     food.ingredients.removeListeners.push(listener);
 
     // Act
-    food.ingredients.remove('Eggs');
+    food.ingredients.delete('Eggs');
 
     // Assert
     expect(items.length).toEqual(1);

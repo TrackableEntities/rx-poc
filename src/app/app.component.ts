@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ObservableCollection } from './framework/observable-collection';
+import { ObservableSet } from './framework/observable-set';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
 
   foods = ['Bacon', 'Lettuce', 'Tomatoes'];
   foodImmut = ['Bacon', 'Lettuce', 'Tomatoes'];
-  foodEntities = new ObservableCollection('Bacon', 'Lettuce', 'Tomatoes');
+  foodEntities = new ObservableSet('Bacon', 'Lettuce', 'Tomatoes');
 
   ngOnInit() {
   }
