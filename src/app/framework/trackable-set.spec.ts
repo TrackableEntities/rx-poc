@@ -1,11 +1,11 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
-import { KeyValuePair } from './observable-entity';
+import { PropertyNotifyInfo } from './observable-entity';
 import { TrackingState } from './trackable';
 import { TrackableSet } from './trackable-set';
 
-xdescribe('TrackableSet', () => {
+describe('TrackableSet', () => {
 
   let changeTracker: TrackableSet<Food>;
 
@@ -59,7 +59,7 @@ xdescribe('TrackableSet', () => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     changeTracker.delete(food);
@@ -73,7 +73,7 @@ xdescribe('TrackableSet', () => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     changeTracker.tracking = false;
@@ -88,7 +88,7 @@ xdescribe('TrackableSet', () => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     changeTracker.delete(food);
@@ -103,7 +103,7 @@ xdescribe('TrackableSet', () => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     changeTracker.delete(food);
@@ -115,31 +115,11 @@ xdescribe('TrackableSet', () => {
     done();
   });
 
-  it('should notify property changed', (done) => {
-
-    // Arrange
-    const listener = new Subject<KeyValuePair>();
-    const props: KeyValuePair[] = [];
-    const food = new Food('Carrots', 4);
-    listener.subscribe(prop => props.push(prop));
-    food.updateListeners.push(listener);
-
-    // Act
-    food.desc = 'Peas';
-    food.price = 5;
-
-    // Assert
-    expect(props.length).toEqual(2);
-    expect(props[0][0]).toEqual('desc');
-    expect(props[1][0]).toEqual('price');
-    done();
-  });
-
   it('should set entity TrackingState to Modified when tracking', (done) => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     food.desc = 'Peas';
@@ -149,11 +129,25 @@ xdescribe('TrackableSet', () => {
     done();
   });
 
+  it('should not set entity TrackingState to Modified when tracking but not changed', (done) => {
+
+    // Arrange
+    changeTracker.tracking = true;
+    const food = [...changeTracker][0];
+
+    // Act
+    food.desc = food.desc;
+
+    // Assert
+    expect(food.TrackingState).toEqual(TrackingState.Unchanged);
+    done();
+  });
+
   it('should not set entity TrackingState to Modified when not tracking', (done) => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     changeTracker.tracking = false;
@@ -168,7 +162,7 @@ xdescribe('TrackableSet', () => {
 
     // Arrange
     changeTracker.tracking = true;
-    const food = changeTracker[0];
+    const food = [...changeTracker][0];
 
     // Act
     food.desc = 'Peas';

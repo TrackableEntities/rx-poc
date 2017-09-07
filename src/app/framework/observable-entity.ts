@@ -1,15 +1,20 @@
 import { Subject } from 'rxjs/Subject';
-import * as _ from 'lodash';
 
 export abstract class ObservableEntity {
 
-  private _updateListeners: Subject<KeyValuePair>[] = [];
+  private _excludedProperties = new Set<string>();
+
+  private _updateListeners: Subject<PropertyNotifyInfo>[] = [];
 
   protected constructor() {
   }
 
-  get updateListeners(): Subject<KeyValuePair>[] {
+  get updateListeners(): Subject<PropertyNotifyInfo>[] {
     return this._updateListeners;
+  }
+
+  addExcludedProperties(...properties: string[]) {
+    properties.forEach(p => this._excludedProperties.add(p));
   }
 
   protected proxify<TEntity extends object>(item: TEntity): TEntity {
@@ -17,10 +22,15 @@ export abstract class ObservableEntity {
       return item;
     }
     const updateListeners = this._updateListeners;
+    const excludedProps = this._excludedProperties;
     const setHandler: ProxyHandler<TEntity> = {
-      set: (target, property, value) => {
-        const keyValue = new KeyValuePair(property.toString(), value);
-        updateListeners.forEach(listener => listener.next(keyValue));
+      set: (target, property, value, receiver) => {
+        const key = property.toString();
+        if (!excludedProps.has(key)) {
+          const keyValue = new PropertyNotifyInfo(key, target[property], value);
+          updateListeners.forEach(listener => listener.next(keyValue));
+        }
+        target[property] = value;
         return true;
       }
     };
@@ -28,11 +38,13 @@ export abstract class ObservableEntity {
   }
 }
 
-export class KeyValuePair {
+export class PropertyNotifyInfo {
   key: string;
+  origValue: any;
   value: any;
-  constructor(key: string, value: any) {
+  constructor(key: string, origValue: any, value: any) {
     this.key = key;
+    this.origValue = origValue;
     this.value = value;
   }
 }

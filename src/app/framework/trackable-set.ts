@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 
+import { PropertyNotifyInfo } from './observable-entity';
 import { ObservableSet } from './observable-set';
 import { ITrackable, TrackingState } from './trackable';
 import { TrackableEntity } from './trackable-entitiy';
@@ -7,6 +8,7 @@ import { TrackableEntity } from './trackable-entitiy';
 export class TrackableSet<TEntity extends TrackableEntity> extends ObservableSet<TEntity> {
 
   private _tracking: boolean;
+  private _updateListener = new Subject<PropertyNotifyInfo>();
   private _addListener = new Subject<TEntity>();
   private _removeListener = new Subject<TEntity>();
 
@@ -30,27 +32,33 @@ export class TrackableSet<TEntity extends TrackableEntity> extends ObservableSet
       const addIndex = this.addListeners.indexOf(this._addListener);
       if (addIndex < 0) {
         this._addListener.subscribe(item => {
-          item.TrackingState = TrackingState.Added;
+          if (item) {
+            item.TrackingState = TrackingState.Added;
+          }
         });
         this.addListeners.push(this._addListener);
       }
       const removeIndex = this.removeListeners.indexOf(this._removeListener);
       if (removeIndex < 0) {
         this._removeListener.subscribe(item => {
-          item.TrackingState = TrackingState.Deleted;
-          this.deletedEntities.add(item[0]);
+          if (item) {
+            item.TrackingState = TrackingState.Deleted;
+            this.deletedEntities.add(item[0]);
+          }
         });
         this.removeListeners.push(this._removeListener);
       }
-      this.forEach(item => {
-        item.updateListeners.forEach(listener => {
-          listener.subscribe(prop => {
-            if (this.tracking === true) {
+      [...this].forEach(item => {
+        const updateIndex = item.updateListeners.indexOf(this._updateListener);
+        if (updateIndex < 0) {
+          item.updateListeners.push(this._updateListener);
+          this._updateListener.subscribe(propInfo => {
+            if (this.tracking === true && (propInfo.origValue !== propInfo.value)) {
               item.TrackingState = TrackingState.Modified;
-              item.ModifiedProperties.add(prop[0]);
+              item.ModifiedProperties.add(propInfo.key);
             }
           });
-        });
+        }
       });
     } else {
       const addIndex = this.addListeners.indexOf(this._addListener);

@@ -8,5 +8,6 @@ export abstract class TrackableEntity extends ObservableEntity implements ITrack
 
   constructor() {
     super();
+    super.addExcludedProperties('TrackingState', 'ModifiedProperties');
   }
 }

@@ -1,4 +1,4 @@
-import { KeyValuePair } from './observable-entity';
+import { PropertyNotifyInfo } from './observable-entity';
 import { ObservableSet } from './observable-set';
 import { Subject } from 'rxjs/Subject';
 
@@ -101,8 +101,8 @@ describe('Observable Entities', () => {
   it('should notify property changed', (done) => {
 
     // Arrange
-    const listener = new Subject<KeyValuePair>();
-    const props: KeyValuePair[] = [];
+    const listener = new Subject<PropertyNotifyInfo>();
+    const props: PropertyNotifyInfo[] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
     food.updateListeners.push(listener);
