@@ -1,6 +1,6 @@
 import { TrackableEntity } from './framework/trackable-entitiy';
 import { ObservableSet } from './framework/observable-set';
-import { ObservableEntityProxy } from './framework/observable-entity-proxy';
+import { ObservableEntity } from './framework/observable-entity';
 
 export class Food extends TrackableEntity {
 
