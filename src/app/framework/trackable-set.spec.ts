@@ -1,41 +1,39 @@
-import { ObservableSet } from './observable-set';
-import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
-import { FoodTrackingContext } from '../food-tracking-context';
+import { ObservableSet } from './observable-set';
 import { TrackingState } from './trackable';
+import { TrackableSet } from './trackable-set';
 
-xdescribe('TrackingContext', () => {
+xdescribe('TrackableSet', () => {
 
-  let foodContext: FoodTrackingContext;
+  let changeTracker: TrackableSet<Food>;
 
   beforeEach(() => {
-    foodContext = new FoodTrackingContext();
     const foods = [
       new Food('Bacon', 1),
       new Food('Lettuce', 2),
       new Food('Tomatoes', 3),
     ];
-    foodContext.Food = new ObservableSet<Food>(...foods);
+    changeTracker = new TrackableSet<Food>(...foods);
   });
 
   it('should be created', () => {
-    expect(foodContext).toBeTruthy();
+    expect(changeTracker).toBeTruthy();
   });
 
   it('should contain items', () => {
-    expect(foodContext.Food.size).toBe(3);
+    expect(changeTracker.size).toBe(3);
   });
 
   it('should set entity TrackingState to Added when tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
+    changeTracker.tracking = true;
     const food = new Food('Carrots', 4);
 
     // Act
-    foodContext.Food.add(food);
+    changeTracker.add(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Added);
@@ -45,12 +43,12 @@ xdescribe('TrackingContext', () => {
   it('should not set entity TrackingState to Added when not tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
+    changeTracker.tracking = true;
     const food = new Food('Carrots', 4);
 
     // Act
-    foodContext.tracking = false;
-    foodContext.Food.add(food);
+    changeTracker.tracking = false;
+    changeTracker.add(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
@@ -60,11 +58,11 @@ xdescribe('TrackingContext', () => {
   it('should set entity TrackingState to Deleted when tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
-    foodContext.Food.delete(food);
+    changeTracker.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
@@ -74,12 +72,12 @@ xdescribe('TrackingContext', () => {
   it('should not set entity TrackingState to Deleted when not tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
-    foodContext.tracking = false;
-    foodContext.Food.delete(food);
+    changeTracker.tracking = false;
+    changeTracker.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
@@ -89,31 +87,31 @@ xdescribe('TrackingContext', () => {
   it('should cache Deleted entities when tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
-    foodContext.Food.delete(food);
+    changeTracker.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
-    expect(foodContext.deletedEntities.size).toEqual(1);
+    expect(changeTracker.deletedEntities.size).toEqual(1);
     done();
   });
 
   it('should clear Deleted entities when not tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
-    foodContext.Food.delete(food);
-    foodContext.tracking = false;
+    changeTracker.delete(food);
+    changeTracker.tracking = false;
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
-    expect(foodContext.deletedEntities.size).toEqual(0);
+    expect(changeTracker.deletedEntities.size).toEqual(0);
     done();
   });
 
@@ -140,8 +138,8 @@ xdescribe('TrackingContext', () => {
   it('should set entity TrackingState to Modified when tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
     food.desc = 'Peas';
@@ -154,11 +152,11 @@ xdescribe('TrackingContext', () => {
   it('should not set entity TrackingState to Modified when not tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
-    foodContext.tracking = false;
+    changeTracker.tracking = false;
     food.desc = 'Peas';
 
     // Assert
@@ -169,8 +167,8 @@ xdescribe('TrackingContext', () => {
   it('should add to entity ModifiedProperties when tracking', (done) => {
 
     // Arrange
-    foodContext.tracking = true;
-    const food = foodContext.Food[0];
+    changeTracker.tracking = true;
+    const food = changeTracker[0];
 
     // Act
     food.desc = 'Peas';
