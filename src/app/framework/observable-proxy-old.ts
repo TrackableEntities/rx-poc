@@ -1,16 +1,18 @@
-import { Subject } from 'rxjs/Subject';
 import * as _ from 'lodash';
+import { Subject } from 'rxjs/Subject';
+
+import { KeyValuePair } from './observable-entity';
 
 export abstract class ObservableProxyOld {
 
-  private _updateListeners: Subject<[string, any]>[] = [];
+  private _updateListeners: Subject<KeyValuePair>[] = [];
   private _addListeners: Subject<any>[] = [];
   private _removeListeners: Subject<any>[] = [];
 
   protected constructor() {
   }
 
-  get updateListeners(): Subject<[string, any]>[] {
+  get updateListeners(): Subject<KeyValuePair>[] {
     return this._updateListeners;
   }
 
@@ -35,7 +37,7 @@ export abstract class ObservableProxyOld {
       set: (target, property, value) => {
         if (!_.isArray(target)) {
           if (target[property] !== value) {
-            updateListeners.forEach(listener => listener.next([property.toString(), value]));
+            updateListeners.forEach(listener => listener.next(new KeyValuePair(property.toString(), value)));
           }
         } else {
           if (+property.toString() >= target.length) {

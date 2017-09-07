@@ -1,4 +1,3 @@
-import { ObservableEntity } from './observable-entity';
 import { Food } from '../food';
 import { proxify } from './proxy-util';
 

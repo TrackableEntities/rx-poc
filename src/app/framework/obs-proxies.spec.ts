@@ -1,16 +1,17 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
+import { KeyValuePair } from './observable-entity';
 
 describe('Observable Proxies', () => {
 
   it('should notify property changed', (done) => {
 
     // Arrange
-    const props: [string, any][] = [];
+    const props: KeyValuePair[] = [];
     const food = new Food('Carrots', 4);
-    const listener = new Subject<[string, any]>();
-    listener.subscribe(prop => props.push([prop[0], prop[1]]));
+    const listener = new Subject<KeyValuePair>();
+    listener.subscribe(prop => props.push(prop));
     food.updateListeners.push(listener);
 
     // Act
@@ -19,20 +20,20 @@ describe('Observable Proxies', () => {
 
     // Assert
     expect(props.length).toEqual(2);
-    expect(props[0][0]).toEqual('desc');
-    expect(props[0][1]).toEqual('Peas');
-    expect(props[1][0]).toEqual('price');
-    expect(props[1][1]).toEqual(5);
+    expect(props[0].key).toEqual('desc');
+    expect(props[0].value).toEqual('Peas');
+    expect(props[1].key).toEqual('price');
+    expect(props[1].value).toEqual(5);
     done();
   });
 
   xit('should not notify property changed', (done) => {
 
     // Arrange
-    const props: [string, any][] = [];
+    const props: KeyValuePair[] = [];
     const food = new Food('Carrots', 4);
-    const listener = new Subject<[string, any]>();
-    listener.subscribe(prop => props.push([prop[0], prop[1]]));
+    const listener = new Subject<KeyValuePair>();
+    listener.subscribe(prop => props.push(prop));
     food.updateListeners.push(listener);
 
     // Act

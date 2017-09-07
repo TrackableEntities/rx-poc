@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
-import { ObservableSet } from './observable-set';
+import { KeyValuePair } from './observable-entity';
 import { TrackingState } from './trackable';
 import { TrackableSet } from './trackable-set';
 
@@ -118,8 +118,8 @@ xdescribe('TrackableSet', () => {
   it('should notify property changed', (done) => {
 
     // Arrange
-    const listener = new Subject<[string, any]>();
-    const props: [string, any][] = [];
+    const listener = new Subject<KeyValuePair>();
+    const props: KeyValuePair[] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
     food.updateListeners.push(listener);

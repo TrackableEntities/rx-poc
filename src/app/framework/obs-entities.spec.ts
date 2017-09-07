@@ -1,3 +1,4 @@
+import { KeyValuePair } from './observable-entity';
 import { ObservableSet } from './observable-set';
 import { Subject } from 'rxjs/Subject';
 
@@ -100,8 +101,8 @@ describe('Observable Entities', () => {
   it('should notify property changed', (done) => {
 
     // Arrange
-    const listener = new Subject<[string, any]>();
-    const props: [string, any][] = [];
+    const listener = new Subject<KeyValuePair>();
+    const props: KeyValuePair[] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
     food.updateListeners.push(listener);
@@ -112,8 +113,8 @@ describe('Observable Entities', () => {
 
     // Assert
     expect(props.length).toEqual(2);
-    expect(props[0][0]).toEqual('desc');
-    expect(props[1][0]).toEqual('price');
+    expect(props[0].key).toEqual('desc');
+    expect(props[1].key).toEqual('price');
     done();
   });
 });

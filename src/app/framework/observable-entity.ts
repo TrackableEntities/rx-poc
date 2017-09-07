@@ -3,12 +3,12 @@ import * as _ from 'lodash';
 
 export abstract class ObservableEntity {
 
-  private _updateListeners: Subject<[string, any]>[] = [];
+  private _updateListeners: Subject<KeyValuePair>[] = [];
 
   protected constructor() {
   }
 
-  get updateListeners(): Subject<[string, any]>[] {
+  get updateListeners(): Subject<KeyValuePair>[] {
     return this._updateListeners;
   }
 
@@ -19,10 +19,20 @@ export abstract class ObservableEntity {
     const updateListeners = this._updateListeners;
     const setHandler: ProxyHandler<TEntity> = {
       set: (target, property, value) => {
-        updateListeners.forEach(listener => listener.next([property.toString(), value]));
+        const keyValue = new KeyValuePair(property.toString(), value);
+        updateListeners.forEach(listener => listener.next(keyValue));
         return true;
       }
     };
     return new Proxy<TEntity>(item, setHandler);
+  }
+}
+
+export class KeyValuePair {
+  key: string;
+  value: any;
+  constructor(key: string, value: any) {
+    this.key = key;
+    this.value = value;
   }
 }
