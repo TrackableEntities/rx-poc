@@ -1,3 +1,4 @@
+import { ObservableEntity } from './framework/observable-entity';
 import { ObservableSet } from './framework/observable-set';
 import { TrackableEntity } from './framework/trackable-entitiy';
 
@@ -7,7 +8,9 @@ export class Food extends TrackableEntity {
   price: number;
   ingredients: ObservableSet<string>;
 
-  constructor(desc: string, price: number, ingredients?: string[]) {
+  constructor();
+  constructor(desc: string, price: number, ingredients?: string[]);
+  constructor(desc?: string, price?: number, ingredients?: string[]) {
     super();
     this.desc = desc;
     this.price = price;
