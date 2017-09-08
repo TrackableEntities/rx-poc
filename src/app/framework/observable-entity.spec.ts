@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
-import { ObservableEntity, PropertyNotifyInfo } from './observable-entity';
+import { ObservableEntity } from './observable-entity';
+import { PropertyNotifyInfo } from './property-notify-info';
 
 describe('Observable Entity', () => {
 
