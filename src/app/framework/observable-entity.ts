@@ -1,12 +1,18 @@
 import { Subject } from 'rxjs/Subject';
 
-export abstract class ObservableEntity {
+export class ObservableEntity {
 
   private _excludedProperties = new Set<string>();
 
   private _updateListeners: Subject<PropertyNotifyInfo>[] = [];
 
   protected constructor() {
+  }
+
+  public static proxify<TEntity extends object>(ctor: { new(): TEntity } ): TEntity {
+    const item = new ctor();
+    const obs = new ObservableEntity();
+    return obs.proxify(item);
   }
 
   get updateListeners(): Subject<PropertyNotifyInfo>[] {
@@ -24,7 +30,7 @@ export abstract class ObservableEntity {
     const updateListeners = this._updateListeners;
     const excludedProps = this._excludedProperties;
     const setHandler: ProxyHandler<TEntity> = {
-      set: (target, property, value, receiver) => {
+      set: (target, property, value) => {
         const key = property.toString();
         if (!excludedProps.has(key)) {
           const keyValue = new PropertyNotifyInfo(key, target[property], value);
