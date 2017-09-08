@@ -1,13 +1,10 @@
-import { Subject } from 'rxjs/Subject';
-
 import { Food } from '../food';
-import { PropertyNotifyInfo } from './observable-entity';
 import { TrackingState } from './trackable';
 import { TrackableSet } from './trackable-set';
 
 describe('TrackableSet', () => {
 
-  let changeTracker: TrackableSet<Food>;
+  let trackableSet: TrackableSet<Food>;
 
   beforeEach(() => {
     const foods = [
@@ -15,25 +12,25 @@ describe('TrackableSet', () => {
       new Food('Lettuce', 2),
       new Food('Tomatoes', 3),
     ];
-    changeTracker = new TrackableSet<Food>(...foods);
+    trackableSet = new TrackableSet<Food>(...foods);
   });
 
   it('should be created', () => {
-    expect(changeTracker).toBeTruthy();
+    expect(trackableSet).toBeTruthy();
   });
 
   it('should contain items', () => {
-    expect(changeTracker.size).toBe(3);
+    expect(trackableSet.size).toBe(3);
   });
 
   it('should set entity TrackingState to Added when tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
+    trackableSet.tracking = true;
     const food = new Food('Carrots', 4);
 
     // Act
-    changeTracker.add(food);
+    trackableSet.add(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Added);
@@ -43,12 +40,12 @@ describe('TrackableSet', () => {
   it('should not set entity TrackingState to Added when not tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
+    trackableSet.tracking = true;
     const food = new Food('Carrots', 4);
 
     // Act
-    changeTracker.tracking = false;
-    changeTracker.add(food);
+    trackableSet.tracking = false;
+    trackableSet.add(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
@@ -58,11 +55,11 @@ describe('TrackableSet', () => {
   it('should set entity TrackingState to Deleted when tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
-    changeTracker.delete(food);
+    trackableSet.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
@@ -72,12 +69,12 @@ describe('TrackableSet', () => {
   it('should not set entity TrackingState to Deleted when not tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
-    changeTracker.tracking = false;
-    changeTracker.delete(food);
+    trackableSet.tracking = false;
+    trackableSet.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
@@ -87,39 +84,39 @@ describe('TrackableSet', () => {
   it('should cache Deleted entities when tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
-    changeTracker.delete(food);
+    trackableSet.delete(food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
-    expect(changeTracker.deletedEntities.size).toEqual(1);
+    expect(trackableSet.deletedEntities.size).toEqual(1);
     done();
   });
 
   it('should clear Deleted entities when not tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
-    changeTracker.delete(food);
-    changeTracker.tracking = false;
+    trackableSet.delete(food);
+    trackableSet.tracking = false;
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Deleted);
-    expect(changeTracker.deletedEntities.size).toEqual(0);
+    expect(trackableSet.deletedEntities.size).toEqual(0);
     done();
   });
 
   it('should set entity TrackingState to Modified when tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
     food.desc = 'Peas';
@@ -132,8 +129,8 @@ describe('TrackableSet', () => {
   it('should not set entity TrackingState to Modified when tracking but not changed', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
     food.desc = food.desc;
@@ -146,11 +143,11 @@ describe('TrackableSet', () => {
   it('should not set entity TrackingState to Modified when not tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
-    changeTracker.tracking = false;
+    trackableSet.tracking = false;
     food.desc = 'Peas';
 
     // Assert
@@ -161,8 +158,8 @@ describe('TrackableSet', () => {
   it('should add to entity ModifiedProperties when tracking', (done) => {
 
     // Arrange
-    changeTracker.tracking = true;
-    const food = [...changeTracker][0];
+    trackableSet.tracking = true;
+    const food = [...trackableSet][0];
 
     // Act
     food.desc = 'Peas';
