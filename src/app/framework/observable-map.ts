@@ -1,31 +1,35 @@
 import { Subject } from 'rxjs/Subject';
 
-export class ObservableMap<TKey, TValue> extends Map<TKey, TValue> {
+import { INotifyInfo } from './notify-info';
+import { IObservableCollection } from './observable-collection';
 
-  private _addListeners: Subject<[TKey, TValue]>[] = [];
-  private _removeListeners: Subject<[TKey, TValue]>[] = [];
+export class ObservableMap<TKey, TEntity> extends Map<TKey, TEntity> implements IObservableCollection<[TKey, TEntity]> {
 
-  constructor(...entries: [TKey, TValue][]) {
+  private _addListeners: Subject<INotifyInfo>[] = [];
+  private _removeListeners: Subject<INotifyInfo>[] = [];
+
+  constructor(...entries: [TKey, TEntity][]) {
     super(entries);
   }
 
-  get addListeners(): Subject<[TKey, TValue]>[] {
+  get addListeners(): Subject<INotifyInfo>[] {
     return this._addListeners;
   }
 
-  get removeListeners(): Subject<[TKey, TValue]>[] {
+  get removeListeners(): Subject<INotifyInfo>[] {
     return this._removeListeners;
   }
 
-  addRange(...entries: [TKey, TValue][]): this {
+  addRange(...entries: [TKey, TEntity][]): this {
     entries.forEach((entry) => this.add(entry[0], entry[1]));
     return this;
   }
 
-  add(key: TKey, value: TValue): this {
+  add(key: TKey, value: TEntity): this {
     super.set(key, value);
     if (this._addListeners) {
-      this._addListeners.forEach(listener => listener.next([key, value]));
+      const notifyInfo: INotifyInfo = { key: key, currentValue: value };
+      this._addListeners.forEach(listener => listener.next(notifyInfo));
     }
     return this;
   }
@@ -33,7 +37,8 @@ export class ObservableMap<TKey, TValue> extends Map<TKey, TValue> {
   delete(key: TKey): boolean {
     const value = super.get(key);
     if (this._removeListeners) {
-      this._removeListeners.forEach(listener => listener.next([key, value]));
+      const notifyInfo: INotifyInfo = { key: key, currentValue: value };
+      this._removeListeners.forEach(listener => listener.next(notifyInfo));
     }
     return super.delete(key);
   }

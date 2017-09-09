@@ -1,19 +1,21 @@
-import { TrackableHelper } from './trackable-helper';
 import { Subject } from 'rxjs/Subject';
 
+import { IEntityNotifyInfo } from './entity-notify-info';
 import { ObservableMap } from './observable-map';
-import { PropertyNotifyInfo } from './property-notify-info';
-import { ITrackable, TrackingState } from './trackable';
+import { IPropertyNotifyInfo } from './property-notify-info';
+import { ITrackableCollection } from './trackable-collection';
 import { TrackableEntity } from './trackable-entitiy';
+import { TrackableHelper } from './trackable-helper';
 
-export class TrackableMap<TKey, TEntity extends TrackableEntity> extends ObservableMap<TKey, TEntity> {
+export class TrackableMap<TKey, TEntity extends TrackableEntity>
+  extends ObservableMap<TKey, TEntity> implements ITrackableCollection<TEntity> {
 
   private _tracking: boolean;
-  private _updateListener = new Subject<PropertyNotifyInfo>();
-  private _addListener = new Subject<[TKey, TEntity]>();
-  private _removeListener = new Subject<[TKey, TEntity]>();
+  private _modifyListener = new Subject<IPropertyNotifyInfo>();
+  private _addListener = new Subject<IEntityNotifyInfo<TEntity>>();
+  private _removeListener = new Subject<IEntityNotifyInfo<TEntity>>();
 
-  deletedEntities = new Set<ITrackable>();
+  protected deletedEntities = new Map<TKey, TEntity>();
 
   constructor(...entries: [TKey, TEntity][]) {
     super(...entries);
@@ -29,6 +31,6 @@ export class TrackableMap<TKey, TEntity extends TrackableEntity> extends Observa
   }
 
   private setTracking() {
-    TrackableHelper.setTrackingForMap(this, this._updateListener, this._addListener, this._removeListener);
+    TrackableHelper.setTracking(this, this.deletedEntities, this._modifyListener, this._addListener, this._removeListener);
   }
 }

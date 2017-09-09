@@ -1,29 +1,29 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
+import { INotifyInfo } from './notify-info';
 import { ObservableEntity } from './observable-entity';
-import { PropertyNotifyInfo } from './property-notify-info';
 
 describe('Observable Entity', () => {
 
   it('ctor should return proxy', () => {
     const food = new Food('Carrots', 4);
-    expect(food.updateListeners).toBeTruthy();
+    expect(food.modifyListeners).toBeTruthy();
   });
 
   it('factory should return proxy', () => {
     const food = ObservableEntity.proxify(Food);
-    expect(food.updateListeners).toBeTruthy();
+    expect(food.modifyListeners).toBeTruthy();
   });
 
   it('should notify property changed', (done) => {
 
     // Arrange
-    const listener = new Subject<PropertyNotifyInfo>();
-    const props: PropertyNotifyInfo[] = [];
+    const listener = new Subject<INotifyInfo>();
+    const props: INotifyInfo[] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
-    food.updateListeners.push(listener);
+    food.modifyListeners.push(listener);
 
     // Act
     food.desc = 'Peas';

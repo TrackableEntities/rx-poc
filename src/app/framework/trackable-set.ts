@@ -1,19 +1,22 @@
-import { TrackableHelper } from './trackable-helper';
 import { Subject } from 'rxjs/Subject';
 
+import { IEntityNotifyInfo } from './entity-notify-info';
 import { ObservableSet } from './observable-set';
-import { PropertyNotifyInfo } from './property-notify-info';
-import { ITrackable, TrackingState } from './trackable';
+import { IPropertyNotifyInfo } from './property-notify-info';
+import { ITrackable } from './trackable';
+import { ITrackableCollection } from './trackable-collection';
 import { TrackableEntity } from './trackable-entitiy';
+import { TrackableHelper } from './trackable-helper';
 
-export class TrackableSet<TEntity extends TrackableEntity> extends ObservableSet<TEntity> {
+export class TrackableSet<TEntity extends TrackableEntity>
+  extends ObservableSet<TEntity> implements ITrackableCollection<TEntity> {
 
   private _tracking: boolean;
-  private _updateListener = new Subject<PropertyNotifyInfo>();
-  private _addListener = new Subject<TEntity>();
-  private _removeListener = new Subject<TEntity>();
+  private _modifyListener = new Subject<IPropertyNotifyInfo>();
+  private _addListener = new Subject<IEntityNotifyInfo<TEntity>>();
+  private _removeListener = new Subject<IEntityNotifyInfo<TEntity>>();
 
-  deletedEntities = new Set<ITrackable>();
+  protected deletedEntities = new Set<TEntity>();
 
   constructor(...items: TEntity[]) {
     super(...items);
@@ -29,6 +32,6 @@ export class TrackableSet<TEntity extends TrackableEntity> extends ObservableSet
   }
 
   private setTracking(): void {
-    TrackableHelper.setTrackingForSet(this, this._updateListener, this._addListener, this._removeListener);
+    TrackableHelper.setTracking(this, this.deletedEntities, this._modifyListener, this._addListener, this._removeListener);
   }
 }

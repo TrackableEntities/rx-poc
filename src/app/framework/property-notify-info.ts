@@ -1,10 +1,7 @@
-export class PropertyNotifyInfo {
-  key: string;
-  origValue: any;
-  value: any;
-  constructor(key: string, origValue: any, value: any) {
-    this.key = key;
-    this.origValue = origValue;
-    this.value = value;
-  }
+import { INotifyInfo } from './notify-info';
+
+export interface IPropertyNotifyInfo extends INotifyInfo {
+  key?: string;
+  origValue?: any;
+  currentValue?: any;
 }

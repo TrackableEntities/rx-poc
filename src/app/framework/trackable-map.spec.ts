@@ -1,5 +1,5 @@
 import { Food } from '../food';
-import { TrackingState } from './trackable';
+import { TrackingState } from './tracking-state';
 import { TrackableMap } from './trackable-map';
 
 describe('TrackableMap', () => {
@@ -92,7 +92,9 @@ describe('TrackableMap', () => {
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Deleted);
-    expect(trackableMap.deletedEntities.size).toEqual(1);
+    const deletedEntities = [...(trackableMap as any).deletedEntities];
+    expect(deletedEntities[0][0]).toBe(entry[0]);
+    expect(deletedEntities[0][1]).toBe(entry[1]);
     done();
   });
 
@@ -108,7 +110,8 @@ describe('TrackableMap', () => {
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Deleted);
-    expect(trackableMap.deletedEntities.size).toEqual(0);
+    const deletedEntities = [...(trackableMap as any).deletedEntities];
+    expect(deletedEntities.length).toEqual(0);
     done();
   });
 

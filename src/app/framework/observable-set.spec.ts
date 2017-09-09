@@ -1,3 +1,4 @@
+import { INotifyInfo } from './notify-info';
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
@@ -12,8 +13,8 @@ describe('ObservableSet', () => {
       // Arrange
       const items: string[] = [];
       const foods = new ObservableSet<string>('Bacon', 'Lettuce', 'Tomato');
-      const listener = new Subject<string>();
-      listener.subscribe(added => items.push(added));
+      const listener = new Subject<INotifyInfo>();
+      listener.subscribe(notifyInfo => items.push(notifyInfo.currentValue));
       foods.addListeners.push(listener);
 
       // Act
@@ -30,8 +31,8 @@ describe('ObservableSet', () => {
       // Arrange
       const items: string[] = [];
       const foods = new ObservableSet<string>('Bacon', 'Lettuce', 'Tomato');
-      const listener = new Subject<string>();
-      listener.subscribe(added => items.push(added));
+      const listener = new Subject<INotifyInfo>();
+      listener.subscribe(notifyInfo => items.push(notifyInfo.currentValue));
       foods.removeListeners.push(listener);
 
       // Act
@@ -65,10 +66,10 @@ describe('ObservableSet', () => {
     it('should notify added', (done) => {
 
       // Arrange
-      const listener = new Subject<Food>();
+      const listener = new Subject<INotifyInfo>();
       const food = new Food('Carrots', 4);
       const added: Food[] = [];
-      listener.subscribe(item => added.push(item));
+      listener.subscribe(notifyInfo => added.push(notifyInfo.currentValue));
       foodSet.addListeners.push(listener);
 
       // Act
@@ -83,11 +84,11 @@ describe('ObservableSet', () => {
     it('should notify multiple added', (done) => {
 
       // Arrange
-      const listener = new Subject<Food>();
+      const listener = new Subject<INotifyInfo>();
       const food1 = new Food('Carrots', 4);
       const food2 = new Food('Peas', 5);
       const added: Food[] = [];
-      listener.subscribe(item => added.push(item));
+      listener.subscribe(notifyInfo => added.push(notifyInfo.currentValue));
       foodSet.addListeners.push(listener);
 
       // Act
@@ -103,10 +104,10 @@ describe('ObservableSet', () => {
     it('should notify removed', (done) => {
 
       // Arrange
-      const listener = new Subject<Food>();
-      const food = foodSet[0];
+      const listener = new Subject<INotifyInfo>();
+      const food = [...foodSet][0];
       const removed: Food[] = [];
-      listener.subscribe(item => removed.push(item));
+      listener.subscribe(notifyInfo => removed.push(notifyInfo.currentValue));
       foodSet.removeListeners.push(listener);
 
       // Act
@@ -121,11 +122,11 @@ describe('ObservableSet', () => {
     it('should notify multiple removed', (done) => {
 
       // Arrange
-      const listener = new Subject<Food>();
-      const food1 = foodSet[0];
-      const food2 = foodSet[1];
+      const listener = new Subject<INotifyInfo>();
+      const food1 = [...foodSet][0];
+      const food2 = [...foodSet][1];
       const removed: Food[] = [];
-      listener.subscribe(item => removed.push(item));
+      listener.subscribe(notifyInfo => removed.push(notifyInfo.currentValue));
       foodSet.removeListeners.push(listener);
 
       // Act
