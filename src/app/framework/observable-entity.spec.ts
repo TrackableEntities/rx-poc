@@ -1,8 +1,8 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
+import { INotifyInfo } from './notify-info';
 import { ObservableEntity } from './observable-entity';
-import { PropertyNotifyInfo } from './property-notify-info';
 
 describe('Observable Entity', () => {
 
@@ -19,8 +19,8 @@ describe('Observable Entity', () => {
   it('should notify property changed', (done) => {
 
     // Arrange
-    const listener = new Subject<PropertyNotifyInfo>();
-    const props: PropertyNotifyInfo[] = [];
+    const listener = new Subject<INotifyInfo>();
+    const props: INotifyInfo[] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
     food.updateListeners.push(listener);

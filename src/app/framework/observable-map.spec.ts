@@ -1,6 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 
 import { Food } from '../food';
+import { INotifyInfo } from './notify-info';
 import { ObservableMap } from './observable-map';
 
 describe('ObservableMap', () => {
@@ -24,10 +25,10 @@ describe('ObservableMap', () => {
   it('should notify added', (done) => {
 
     // Arrange
-    const listener = new Subject<[string, Food]>();
+    const listener = new Subject<INotifyInfo>();
     const food = new Food('Carrots', 4);
-    const added: [string, Food][] = [];
-    listener.subscribe(entry => added.push(entry));
+    const added: INotifyInfo[] = [];
+    listener.subscribe(notifyInfo => added.push(notifyInfo));
     foodMap.addListeners.push(listener);
 
     // Act
@@ -35,19 +36,19 @@ describe('ObservableMap', () => {
 
     // Assert
     expect(added.length).toEqual(1);
-    expect(added[0][0]).toBe('Carrots');
-    expect(added[0][1]).toBe(food);
+    expect(added[0].key).toBe('Carrots');
+    expect(added[0].currentValue).toBe(food);
     done();
   });
 
   it('should notify multiple added', (done) => {
 
     // Arrange
-    const listener = new Subject<[string, Food]>();
+    const listener = new Subject<INotifyInfo>();
     const food1 = new Food('Carrots', 4);
     const food2 = new Food('Peas', 5);
-    const added: [string, Food][] = [];
-    listener.subscribe(entry => added.push(entry));
+    const added: INotifyInfo[] = [];
+    listener.subscribe(notifyInfo => added.push(notifyInfo));
     foodMap.addListeners.push(listener);
 
     // Act
@@ -55,20 +56,20 @@ describe('ObservableMap', () => {
 
     // Assert
     expect(added.length).toEqual(2);
-    expect(added[0][0]).toBe('Carrots');
-    expect(added[0][1]).toBe(food1);
-    expect(added[1][0]).toBe('Peas');
-    expect(added[1][1]).toBe(food2);
+    expect(added[0].key).toBe('Carrots');
+    expect(added[0].currentValue).toBe(food1);
+    expect(added[1].key).toBe('Peas');
+    expect(added[1].currentValue).toBe(food2);
     done();
   });
 
   it('should notify removed', (done) => {
 
     // Arrange
-    const listener = new Subject<[string, Food]>();
+    const listener = new Subject<INotifyInfo>();
     const food = foodMap.get('Bacon');
-    const removed: [string, Food][] = [];
-    listener.subscribe(entry => removed.push(entry));
+    const removed: INotifyInfo[] = [];
+    listener.subscribe(notifyInfo => removed.push(notifyInfo));
     foodMap.removeListeners.push(listener);
 
     // Act
@@ -76,19 +77,19 @@ describe('ObservableMap', () => {
 
     // Assert
     expect(removed.length).toEqual(1);
-    expect(removed[0][0]).toBe(food.desc);
-    expect(removed[0][1]).toBe(food);
+    expect(removed[0].key).toBe(food.desc);
+    expect(removed[0].currentValue).toBe(food);
     done();
   });
 
   it('should notify multiple removed', (done) => {
 
     // Arrange
-    const listener = new Subject<[string, Food]>();
+    const listener = new Subject<INotifyInfo>();
     const food1 = foodMap.get('Bacon');
     const food2 = foodMap.get('Lettuce');
-    const removed: [string, Food][] = [];
-    listener.subscribe(entry => removed.push(entry));
+    const removed: INotifyInfo[] = [];
+    listener.subscribe(notifyInfo => removed.push(notifyInfo));
     foodMap.removeListeners.push(listener);
 
     // Act
@@ -96,10 +97,10 @@ describe('ObservableMap', () => {
 
     // Assert
     expect(removed.length).toEqual(2);
-    expect(removed[0][0]).toBe(food1.desc);
-    expect(removed[0][1]).toBe(food1);
-    expect(removed[1][0]).toBe(food2.desc);
-    expect(removed[1][1]).toBe(food2);
+    expect(removed[0].key).toBe(food1.desc);
+    expect(removed[0].currentValue).toBe(food1);
+    expect(removed[1].key).toBe(food2.desc);
+    expect(removed[1].currentValue).toBe(food2);
     done();
   });
 });

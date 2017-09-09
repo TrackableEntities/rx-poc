@@ -1,115 +1,68 @@
-import { TrackableMap } from './trackable-map';
 import { Subject } from 'rxjs/Subject';
 
-import { PropertyNotifyInfo } from './property-notify-info';
+import { IDeletedEntities } from './deleted-entitites';
+import { IEntityNotifyInfo } from './entity-notify-info';
+import { IPropertyNotifyInfo } from './property-notify-info';
 import { TrackingState } from './trackable';
+import { ITrackableCollection } from './trackable-collection';
 import { TrackableEntity } from './trackable-entitiy';
-import { TrackableSet } from './trackable-set';
 
 export abstract class TrackableHelper {
 
-  public static setTrackingForSet<TEntity extends TrackableEntity>(
-    trackableSet: TrackableSet<TEntity>,
-    updateListener: Subject<PropertyNotifyInfo>,
-    addListener: Subject<TEntity>,
-    removeListener: Subject<TEntity>): void {
+  public static setTracking<TEntity extends TrackableEntity>(
+    trackable: ITrackableCollection<TEntity>,
+    deletedEntities: IDeletedEntities,
+    updateListener: Subject<IPropertyNotifyInfo>,
+    addListener: Subject<IEntityNotifyInfo<TEntity>>,
+    removeListener: Subject<IEntityNotifyInfo<TEntity>>): void {
 
-    if (trackableSet.tracking === true) {
-      const addIndex = trackableSet.addListeners.indexOf(addListener);
+    if (trackable.tracking === true) {
+      const addIndex = trackable.addListeners.indexOf(addListener);
       if (addIndex < 0) {
-        addListener.subscribe(item => {
-          if (item) {
-            item.TrackingState = TrackingState.Added;
+        addListener.subscribe(notifyInfo => {
+          if (notifyInfo && notifyInfo.currentValue) {
+            notifyInfo.currentValue.TrackingState = TrackingState.Added;
           }
         });
-        trackableSet.addListeners.push(addListener);
+        trackable.addListeners.push(addListener);
       }
-      const removeIndex = trackableSet.removeListeners.indexOf(removeListener);
+      const removeIndex = trackable.removeListeners.indexOf(removeListener);
       if (removeIndex < 0) {
-        removeListener.subscribe(item => {
-          if (item) {
-            item.TrackingState = TrackingState.Deleted;
-            trackableSet.deletedEntities.add(item);
+        removeListener.subscribe(notifyInfo => {
+          if (notifyInfo && notifyInfo.currentValue) {
+            notifyInfo.currentValue.TrackingState = TrackingState.Deleted;
+            if (deletedEntities.add) {
+              deletedEntities.add(notifyInfo.currentValue);
+            } else if (deletedEntities.set) {
+              deletedEntities.set(notifyInfo.key, notifyInfo.currentValue);
+            }
           }
         });
-        trackableSet.removeListeners.push(removeListener);
+        trackable.removeListeners.push(removeListener);
       }
-      [...trackableSet].forEach(item => {
-        const updateIndex = item.updateListeners.indexOf(updateListener);
-        if (updateIndex < 0) {
-          item.updateListeners.push(updateListener);
-          updateListener.subscribe(propInfo => {
-            if (trackableSet.tracking === true && (propInfo.origValue !== propInfo.value)) {
-              item.TrackingState = TrackingState.Modified;
-              item.ModifiedProperties.add(propInfo.key);
-            }
-          });
-        }
-      });
+      // [...trackable].forEach(item => {
+      //   const updateIndex = item.updateListeners.indexOf(updateListener);
+      //   if (updateIndex < 0) {
+      //     item.updateListeners.push(updateListener);
+      //     updateListener.subscribe(propInfo => {
+      //       if (trackable.tracking === true && (propInfo.origValue !== propInfo.currentValue)) {
+      //         item.TrackingState = TrackingState.Modified;
+      //         item.ModifiedProperties.add(propInfo.key);
+      //       }
+      //     });
+      //   }
+      // });
     } else {
-      const addIndex = trackableSet.addListeners.indexOf(addListener);
+      const addIndex = trackable.addListeners.indexOf(addListener);
       if (addIndex >= 0) {
         addListener.unsubscribe();
-        trackableSet.addListeners.splice(addIndex, trackableSet.addListeners.length);
+        trackable.addListeners.splice(addIndex, trackable.addListeners.length);
       }
-      const removeIndex = trackableSet.removeListeners.indexOf(removeListener);
+      const removeIndex = trackable.removeListeners.indexOf(removeListener);
       if (removeIndex >= 0) {
         removeListener.unsubscribe();
-        trackableSet.deletedEntities.clear();
-        trackableSet.removeListeners.splice(addIndex, trackableSet.removeListeners.length);
-      }
-    }
-  }
-
-  public static setTrackingForMap<TKey, TEntity extends TrackableEntity>(
-    trackableMap: TrackableMap<TKey, TEntity>,
-    updateListener: Subject<PropertyNotifyInfo>,
-    addListener: Subject<[TKey, TEntity]>,
-    removeListener: Subject<[TKey, TEntity]>): void {
-
-      if (trackableMap.tracking === true) {
-      const addIndex = trackableMap.addListeners.indexOf(addListener);
-      if (addIndex < 0) {
-        addListener.subscribe(entry => {
-          if (entry) {
-            entry[1].TrackingState = TrackingState.Added;
-          }
-        });
-        trackableMap.addListeners.push(addListener);
-      }
-      const removeIndex = trackableMap.removeListeners.indexOf(removeListener);
-      if (removeIndex < 0) {
-        removeListener.subscribe(entry => {
-          if (entry) {
-            entry[1].TrackingState = TrackingState.Deleted;
-            trackableMap.deletedEntities.add(entry[1]);
-          }
-        });
-        trackableMap.removeListeners.push(removeListener);
-      }
-      [...trackableMap].forEach(entry => {
-        const updateIndex = entry[1].updateListeners.indexOf(updateListener);
-        if (updateIndex < 0) {
-          entry[1].updateListeners.push(updateListener);
-          updateListener.subscribe(propInfo => {
-            if (trackableMap.tracking === true && (propInfo.origValue !== propInfo.value)) {
-              entry[1].TrackingState = TrackingState.Modified;
-              entry[1].ModifiedProperties.add(propInfo.key);
-            }
-          });
-        }
-      });
-    } else {
-      const addIndex = trackableMap.addListeners.indexOf(addListener);
-      if (addIndex >= 0) {
-        addListener.unsubscribe();
-        trackableMap.addListeners.splice(addIndex, trackableMap.addListeners.length);
-      }
-      const removeIndex = trackableMap.removeListeners.indexOf(removeListener);
-      if (removeIndex >= 0) {
-        removeListener.unsubscribe();
-        trackableMap.deletedEntities.clear();
-        trackableMap.removeListeners.splice(addIndex, trackableMap.removeListeners.length);
+        deletedEntities.clear();
+        trackable.removeListeners.splice(addIndex, trackable.removeListeners.length);
       }
     }
   }

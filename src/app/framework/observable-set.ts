@@ -1,19 +1,22 @@
 import { Subject } from 'rxjs/Subject';
 
-export class ObservableSet<TEntity> extends Set<TEntity> {
+import { INotifyInfo } from './notify-info';
+import { IObservableCollection } from './observable-collection';
 
-  private _addListeners: Subject<TEntity>[] = [];
-  private _removeListeners: Subject<TEntity>[] = [];
+export class ObservableSet<TEntity> extends Set<TEntity> implements IObservableCollection<TEntity> {
+
+  private _addListeners: Subject<INotifyInfo>[] = [];
+  private _removeListeners: Subject<INotifyInfo>[] = [];
 
   constructor(...items: TEntity[]) {
     super(items);
   }
 
-  get addListeners(): Subject<TEntity>[] {
+  get addListeners(): Subject<INotifyInfo>[] {
     return this._addListeners;
   }
 
-  get removeListeners(): Subject<TEntity>[] {
+  get removeListeners(): Subject<INotifyInfo>[] {
     return this._removeListeners;
   }
 
@@ -25,14 +28,16 @@ export class ObservableSet<TEntity> extends Set<TEntity> {
   add(value: TEntity): this {
     super.add(value);
     if (this._addListeners) {
-      this._addListeners.forEach(listener => listener.next(value));
+      const notifyInfo: INotifyInfo = { currentValue: value };
+      this._addListeners.forEach(listener => listener.next(notifyInfo));
     }
     return this;
   }
 
   delete(value: TEntity): boolean {
     if (this._removeListeners) {
-      this._removeListeners.forEach(listener => listener.next(value));
+      const notifyInfo: INotifyInfo = { currentValue: value };
+      this._removeListeners.forEach(listener => listener.next(notifyInfo));
     }
     return super.delete(value);
   }
