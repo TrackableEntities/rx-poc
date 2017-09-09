@@ -29,7 +29,7 @@ export abstract class TrackableHelper {
         removeListener.subscribe(item => {
           if (item) {
             item.TrackingState = TrackingState.Deleted;
-            trackableSet.deletedEntities.add(item[0]);
+            trackableSet.deletedEntities.add(item);
           }
         });
         trackableSet.removeListeners.push(removeListener);
@@ -82,7 +82,7 @@ export abstract class TrackableHelper {
         removeListener.subscribe(entry => {
           if (entry) {
             entry[1].TrackingState = TrackingState.Deleted;
-            trackableMap.deletedEntities.add(entry[0][1]);
+            trackableMap.deletedEntities.add(entry[1]);
           }
         });
         trackableMap.removeListeners.push(removeListener);

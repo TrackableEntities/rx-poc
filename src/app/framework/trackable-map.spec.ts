@@ -92,7 +92,7 @@ describe('TrackableMap', () => {
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Deleted);
-    expect(trackableMap.deletedEntities.size).toEqual(1);
+    expect([...trackableMap.deletedEntities][0]).toBe(entry[1]);
     done();
   });
 
