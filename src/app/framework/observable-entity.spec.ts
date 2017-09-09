@@ -8,12 +8,12 @@ describe('Observable Entity', () => {
 
   it('ctor should return proxy', () => {
     const food = new Food('Carrots', 4);
-    expect(food.updateListeners).toBeTruthy();
+    expect(food.modifyListeners).toBeTruthy();
   });
 
   it('factory should return proxy', () => {
     const food = ObservableEntity.proxify(Food);
-    expect(food.updateListeners).toBeTruthy();
+    expect(food.modifyListeners).toBeTruthy();
   });
 
   it('should notify property changed', (done) => {
@@ -23,7 +23,7 @@ describe('Observable Entity', () => {
     const props: INotifyInfo[] = [];
     const food = new Food('Carrots', 4);
     listener.subscribe(prop => props.push(prop));
-    food.updateListeners.push(listener);
+    food.modifyListeners.push(listener);
 
     // Act
     food.desc = 'Peas';

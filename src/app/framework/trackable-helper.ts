@@ -3,16 +3,16 @@ import { Subject } from 'rxjs/Subject';
 import { IDeletedEntities } from './deleted-entitites';
 import { IEntityNotifyInfo } from './entity-notify-info';
 import { IPropertyNotifyInfo } from './property-notify-info';
-import { TrackingState } from './trackable';
+import { TrackingState } from './tracking-state';
 import { ITrackableCollection } from './trackable-collection';
 import { TrackableEntity } from './trackable-entitiy';
 
 export abstract class TrackableHelper {
 
   public static setTracking<TEntity extends TrackableEntity>(
-    trackable: ITrackableCollection<TEntity>,
+    trackable: ITrackableCollection<TEntity | [any, TrackableEntity]>,
     deletedEntities: IDeletedEntities,
-    updateListener: Subject<IPropertyNotifyInfo>,
+    modifyListener: Subject<IPropertyNotifyInfo>,
     addListener: Subject<IEntityNotifyInfo<TEntity>>,
     removeListener: Subject<IEntityNotifyInfo<TEntity>>): void {
 
@@ -40,18 +40,6 @@ export abstract class TrackableHelper {
         });
         trackable.removeListeners.push(removeListener);
       }
-      // [...trackable].forEach(item => {
-      //   const updateIndex = item.updateListeners.indexOf(updateListener);
-      //   if (updateIndex < 0) {
-      //     item.updateListeners.push(updateListener);
-      //     updateListener.subscribe(propInfo => {
-      //       if (trackable.tracking === true && (propInfo.origValue !== propInfo.currentValue)) {
-      //         item.TrackingState = TrackingState.Modified;
-      //         item.ModifiedProperties.add(propInfo.key);
-      //       }
-      //     });
-      //   }
-      // });
     } else {
       const addIndex = trackable.addListeners.indexOf(addListener);
       if (addIndex >= 0) {
@@ -65,5 +53,13 @@ export abstract class TrackableHelper {
         trackable.removeListeners.splice(addIndex, trackable.removeListeners.length);
       }
     }
+    [...trackable].forEach(item => {
+      if (item instanceof TrackableEntity) {
+        item.tracking = trackable.tracking;
+      } else {
+        const entity = item as [any, TrackableEntity];
+        entity[1].tracking = trackable.tracking;
+      }
+    });
   }
 }

@@ -12,7 +12,7 @@ export class TrackableSet<TEntity extends TrackableEntity>
   extends ObservableSet<TEntity> implements ITrackableCollection<TEntity> {
 
   private _tracking: boolean;
-  private _updateListener = new Subject<IPropertyNotifyInfo>();
+  private _modifyListener = new Subject<IPropertyNotifyInfo>();
   private _addListener = new Subject<IEntityNotifyInfo<TEntity>>();
   private _removeListener = new Subject<IEntityNotifyInfo<TEntity>>();
 
@@ -32,6 +32,6 @@ export class TrackableSet<TEntity extends TrackableEntity>
   }
 
   private setTracking(): void {
-    TrackableHelper.setTracking(this, this.deletedEntities, this._updateListener, this._addListener, this._removeListener);
+    TrackableHelper.setTracking(this, this.deletedEntities, this._modifyListener, this._addListener, this._removeListener);
   }
 }

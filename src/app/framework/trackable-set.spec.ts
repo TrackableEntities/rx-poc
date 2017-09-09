@@ -1,5 +1,5 @@
 import { Food } from '../food';
-import { TrackingState } from './trackable';
+import { TrackingState } from './tracking-state';
 import { TrackableSet } from './trackable-set';
 
 describe('TrackableSet', () => {
@@ -114,7 +114,7 @@ describe('TrackableSet', () => {
     done();
   });
 
-  xit('should set entity TrackingState to Modified when tracking', (done) => {
+  it('should set entity TrackingState to Modified when tracking', (done) => {
 
     // Arrange
     trackableSet.tracking = true;
@@ -128,7 +128,7 @@ describe('TrackableSet', () => {
     done();
   });
 
-  xit('should not set entity TrackingState to Modified when tracking but not changed', (done) => {
+  it('should not set entity TrackingState to Modified when tracking but not changed', (done) => {
 
     // Arrange
     trackableSet.tracking = true;
@@ -142,7 +142,7 @@ describe('TrackableSet', () => {
     done();
   });
 
-  xit('should not set entity TrackingState to Modified when not tracking', (done) => {
+  it('should not set entity TrackingState to Modified when not tracking', (done) => {
 
     // Arrange
     trackableSet.tracking = true;
@@ -157,7 +157,7 @@ describe('TrackableSet', () => {
     done();
   });
 
-  xit('should add to entity ModifiedProperties when tracking', (done) => {
+  it('should add to entity ModifiedProperties when tracking', (done) => {
 
     // Arrange
     trackableSet.tracking = true;

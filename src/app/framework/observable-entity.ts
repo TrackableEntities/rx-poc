@@ -6,7 +6,7 @@ export class ObservableEntity {
 
   private _excludedProperties = new Set<string>();
 
-  private _updateListeners: Subject<INotifyInfo>[] = [];
+  private _modifyListeners: Subject<INotifyInfo>[] = [];
 
   protected constructor() {
   }
@@ -17,8 +17,8 @@ export class ObservableEntity {
     return obs.proxify(item);
   }
 
-  get updateListeners(): Subject<INotifyInfo>[] {
-    return this._updateListeners;
+  get modifyListeners(): Subject<INotifyInfo>[] {
+    return this._modifyListeners;
   }
 
   addExcludedProperties(...properties: string[]) {
@@ -29,14 +29,14 @@ export class ObservableEntity {
     if (!item) {
       return item;
     }
-    const updateListeners = this._updateListeners;
+    const modifyListeners = this._modifyListeners;
     const excludedProps = this._excludedProperties;
     const setHandler: ProxyHandler<TEntity> = {
       set: (target, property, value) => {
         const key = property.toString();
         if (!excludedProps.has(key)) {
           const notifyInfo: INotifyInfo = { key: key, origValue: target[property], currentValue: value };
-          updateListeners.forEach(listener => listener.next(notifyInfo));
+          modifyListeners.forEach(listener => listener.next(notifyInfo));
         }
         target[property] = value;
         return true;
