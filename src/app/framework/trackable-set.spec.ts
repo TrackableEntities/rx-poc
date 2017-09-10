@@ -8,9 +8,9 @@ describe('TrackableSet', () => {
 
   beforeEach(() => {
     const foods = [
-      new Product('Bacon', 1),
-      new Product('Lettuce', 2),
-      new Product('Tomatoes', 3),
+      new Product(1, 'Bacon', 1),
+      new Product(2, 'Lettuce', 2),
+      new Product(3, 'Tomatoes', 3),
     ];
     trackableSet = new TrackableSet<Product>(...foods);
   });
@@ -27,7 +27,7 @@ describe('TrackableSet', () => {
 
     // Arrange
     trackableSet.tracking = true;
-    const food = new Product('Carrots', 4);
+    const food = new Product(4, 'Carrots', 4);
 
     // Act
     trackableSet.add(food);
@@ -41,7 +41,7 @@ describe('TrackableSet', () => {
 
     // Arrange
     trackableSet.tracking = true;
-    const food = new Product('Carrots', 4);
+    const food = new Product(4, 'Carrots', 4);
 
     // Act
     trackableSet.tracking = false;

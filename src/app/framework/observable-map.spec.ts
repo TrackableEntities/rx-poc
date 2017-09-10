@@ -11,9 +11,9 @@ describe('ObservableMap', () => {
   beforeEach(() => {
     foodMap = new ObservableMap<string, Product>();
     const entries: [string, Product][] = [
-      ['Bacon', new Product('Bacon', 1)],
-      ['Lettuce', new Product('Lettuce', 2)],
-      ['Tomatoes', new Product('Tomatoes', 3)],
+      ['Bacon', new Product(1, 'Bacon', 1)],
+      ['Lettuce', new Product(2, 'Lettuce', 2)],
+      ['Tomatoes', new Product(3, 'Tomatoes', 3)],
     ];
     foodMap.addRange(...entries);
   });
@@ -26,7 +26,7 @@ describe('ObservableMap', () => {
 
     // Arrange
     const listener = new Subject<INotifyInfo>();
-    const food = new Product('Carrots', 4);
+    const food = new Product(4, 'Carrots', 4);
     const added: INotifyInfo[] = [];
     listener.subscribe(notifyInfo => added.push(notifyInfo));
     foodMap.addListeners.push(listener);
@@ -45,8 +45,8 @@ describe('ObservableMap', () => {
 
     // Arrange
     const listener = new Subject<INotifyInfo>();
-    const food1 = new Product('Carrots', 4);
-    const food2 = new Product('Peas', 5);
+    const food1 = new Product(4, 'Carrots', 4);
+    const food2 = new Product(5, 'Peas', 5);
     const added: INotifyInfo[] = [];
     listener.subscribe(notifyInfo => added.push(notifyInfo));
     foodMap.addListeners.push(listener);

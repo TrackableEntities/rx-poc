@@ -7,12 +7,15 @@ export class Product extends TrackableEntity {
   unitPrice: number;
   categoryId: number;
   category: Category;
+
   constructor();
-  constructor(productName: string, unitPrice: number);
-  constructor(productName?: string, unitPrice?: number) {
+  constructor(productId: number, productName: string, unitPrice: number, category?: Category);
+  constructor(productId?: number, productName?: string, unitPrice?: number, category?: Category) {
     super();
+    this.productId = productId;
     this.productName = productName;
     this.unitPrice = unitPrice;
+    this.category = category;
     return super.proxify(this);
   }
 }

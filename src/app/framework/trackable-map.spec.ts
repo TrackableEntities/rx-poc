@@ -8,9 +8,9 @@ describe('TrackableMap', () => {
 
   beforeEach(() => {
     const entries: [string, Product][] = [
-      ['Bacon', new Product('Bacon', 1)],
-      ['Lettuce', new Product('Lettuce', 2)],
-      ['Tomatoes', new Product('Tomatoes', 3)],
+      ['Bacon', new Product(1, 'Bacon', 1)],
+      ['Lettuce', new Product(2, 'Lettuce', 2)],
+      ['Tomatoes', new Product(3, 'Tomatoes', 3)],
     ];
     trackableMap = new TrackableMap<string, Product>(...entries);
   });
@@ -27,7 +27,7 @@ describe('TrackableMap', () => {
 
     // Arrange
     trackableMap.tracking = true;
-    const food = new Product('Carrots', 4);
+    const food = new Product(4, 'Carrots', 4);
 
     // Act
     trackableMap.add(food.productName, food);
@@ -41,7 +41,7 @@ describe('TrackableMap', () => {
 
     // Arrange
     trackableMap.tracking = true;
-    const food = new Product('Carrots', 4);
+    const food = new Product(5, 'Carrots', 4);
 
     // Act
     trackableMap.tracking = false;

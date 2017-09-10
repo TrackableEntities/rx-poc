@@ -7,7 +7,7 @@ import { ObservableEntity } from './observable-entity';
 describe('Observable Entity', () => {
 
   it('ctor should return proxy', () => {
-    const food = new Product('Carrots', 4);
+    const food = new Product(1, 'Carrots', 4);
     expect(food.modifyListeners).toBeTruthy();
   });
 
@@ -21,7 +21,7 @@ describe('Observable Entity', () => {
     // Arrange
     const listener = new Subject<INotifyInfo>();
     const props: INotifyInfo[] = [];
-    const food = new Product('Carrots', 4);
+    const food = new Product(1, 'Carrots', 4);
     listener.subscribe(prop => props.push(prop));
     food.modifyListeners.push(listener);
 
