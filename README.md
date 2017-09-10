@@ -2,6 +2,10 @@
 
 *This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.2.*
 
+## Getting Started
+
+From terminal run: `npm install`
+
 ## Project Structure
 
 - Relevant classes are located in the **src/app** folder.
