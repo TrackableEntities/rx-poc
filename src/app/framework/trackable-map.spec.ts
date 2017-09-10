@@ -1,18 +1,18 @@
-import { Food } from '../food';
+import { Product } from '../models/product';
 import { TrackingState } from './tracking-state';
 import { TrackableMap } from './trackable-map';
 
 describe('TrackableMap', () => {
 
-  let trackableMap: TrackableMap<string, Food>;
+  let trackableMap: TrackableMap<string, Product>;
 
   beforeEach(() => {
-    const entries: [string, Food][] = [
-      ['Bacon', new Food('Bacon', 1)],
-      ['Lettuce', new Food('Lettuce', 2)],
-      ['Tomatoes', new Food('Tomatoes', 3)],
+    const entries: [string, Product][] = [
+      ['Bacon', new Product(1, 'Bacon', 1)],
+      ['Lettuce', new Product(2, 'Lettuce', 2)],
+      ['Tomatoes', new Product(3, 'Tomatoes', 3)],
     ];
-    trackableMap = new TrackableMap<string, Food>(...entries);
+    trackableMap = new TrackableMap<string, Product>(...entries);
   });
 
   it('should be created', () => {
@@ -27,10 +27,10 @@ describe('TrackableMap', () => {
 
     // Arrange
     trackableMap.tracking = true;
-    const food = new Food('Carrots', 4);
+    const food = new Product(4, 'Carrots', 4);
 
     // Act
-    trackableMap.add(food.desc, food);
+    trackableMap.add(food.productName, food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Added);
@@ -41,11 +41,11 @@ describe('TrackableMap', () => {
 
     // Arrange
     trackableMap.tracking = true;
-    const food = new Food('Carrots', 4);
+    const food = new Product(5, 'Carrots', 4);
 
     // Act
     trackableMap.tracking = false;
-    trackableMap.add(food.desc, food);
+    trackableMap.add(food.productName, food);
 
     // Assert
     expect(food.TrackingState).toEqual(TrackingState.Unchanged);
@@ -122,7 +122,7 @@ describe('TrackableMap', () => {
     const entry = [...trackableMap][0];
 
     // Act
-    entry[1].desc = 'Peas';
+    entry[1].productName = 'Peas';
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Modified);
@@ -136,7 +136,7 @@ describe('TrackableMap', () => {
     const entry = [...trackableMap][0];
 
     // Act
-    entry[1].desc = entry[1].desc;
+    entry[1].productName = entry[1].productName;
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Unchanged);
@@ -151,7 +151,7 @@ describe('TrackableMap', () => {
 
     // Act
     trackableMap.tracking = false;
-    entry[1].desc = 'Peas';
+    entry[1].productName = 'Peas';
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Unchanged);
@@ -165,14 +165,14 @@ describe('TrackableMap', () => {
     const entry = [...trackableMap][0];
 
     // Act
-    entry[1].desc = 'Peas';
-    entry[1].price = 5;
+    entry[1].productName = 'Peas';
+    entry[1].unitPrice = 5;
 
     // Assert
     expect(entry[1].TrackingState).toEqual(TrackingState.Modified);
     expect(entry[1].ModifiedProperties.size).toEqual(2);
-    expect(entry[1].ModifiedProperties.has('desc')).toBeTruthy();
-    expect(entry[1].ModifiedProperties.has('price')).toBeTruthy();
+    expect(entry[1].ModifiedProperties.has('productName')).toBeTruthy();
+    expect(entry[1].ModifiedProperties.has('unitPrice')).toBeTruthy();
     done();
   });
 });

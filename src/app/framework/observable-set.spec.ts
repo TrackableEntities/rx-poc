@@ -1,7 +1,7 @@
 import { INotifyInfo } from './notify-info';
 import { Subject } from 'rxjs/Subject';
 
-import { Food } from '../food';
+import { Product } from '../models/product';
 import { ObservableSet } from './observable-set';
 
 describe('ObservableSet', () => {
@@ -47,14 +47,14 @@ describe('ObservableSet', () => {
 
   describe('with entities', () => {
 
-    let foodSet: ObservableSet<Food>;
+    let foodSet: ObservableSet<Product>;
 
     beforeEach(() => {
-      foodSet = new ObservableSet<Food>();
+      foodSet = new ObservableSet<Product>();
       const foods = [
-        new Food('Bacon', 1),
-        new Food('Lettuce', 2),
-        new Food('Tomatoes', 3),
+        new Product(1, 'Bacon', 1),
+        new Product(2, 'Lettuce', 2),
+        new Product(3, 'Tomatoes', 3),
       ];
       foodSet.addRange(...foods);
     });
@@ -67,8 +67,8 @@ describe('ObservableSet', () => {
 
       // Arrange
       const listener = new Subject<INotifyInfo>();
-      const food = new Food('Carrots', 4);
-      const added: Food[] = [];
+      const food = new Product(4, 'Carrots', 4);
+      const added: Product[] = [];
       listener.subscribe(notifyInfo => added.push(notifyInfo.currentValue));
       foodSet.addListeners.push(listener);
 
@@ -85,9 +85,9 @@ describe('ObservableSet', () => {
 
       // Arrange
       const listener = new Subject<INotifyInfo>();
-      const food1 = new Food('Carrots', 4);
-      const food2 = new Food('Peas', 5);
-      const added: Food[] = [];
+      const food1 = new Product(4, 'Carrots', 4);
+      const food2 = new Product(5, 'Peas', 5);
+      const added: Product[] = [];
       listener.subscribe(notifyInfo => added.push(notifyInfo.currentValue));
       foodSet.addListeners.push(listener);
 
@@ -106,7 +106,7 @@ describe('ObservableSet', () => {
       // Arrange
       const listener = new Subject<INotifyInfo>();
       const food = [...foodSet][0];
-      const removed: Food[] = [];
+      const removed: Product[] = [];
       listener.subscribe(notifyInfo => removed.push(notifyInfo.currentValue));
       foodSet.removeListeners.push(listener);
 
@@ -125,7 +125,7 @@ describe('ObservableSet', () => {
       const listener = new Subject<INotifyInfo>();
       const food1 = [...foodSet][0];
       const food2 = [...foodSet][1];
-      const removed: Food[] = [];
+      const removed: Product[] = [];
       listener.subscribe(notifyInfo => removed.push(notifyInfo.currentValue));
       foodSet.removeListeners.push(listener);
 

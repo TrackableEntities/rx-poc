@@ -1,19 +1,19 @@
 import { Subject } from 'rxjs/Subject';
 
-import { Food } from '../food';
+import { Product } from '../models/product';
 import { INotifyInfo } from './notify-info';
 import { ObservableMap } from './observable-map';
 
 describe('ObservableMap', () => {
 
-  let foodMap: ObservableMap<string, Food>;
+  let foodMap: ObservableMap<string, Product>;
 
   beforeEach(() => {
-    foodMap = new ObservableMap<string, Food>();
-    const entries: [string, Food][] = [
-      ['Bacon', new Food('Bacon', 1)],
-      ['Lettuce', new Food('Lettuce', 2)],
-      ['Tomatoes', new Food('Tomatoes', 3)],
+    foodMap = new ObservableMap<string, Product>();
+    const entries: [string, Product][] = [
+      ['Bacon', new Product(1, 'Bacon', 1)],
+      ['Lettuce', new Product(2, 'Lettuce', 2)],
+      ['Tomatoes', new Product(3, 'Tomatoes', 3)],
     ];
     foodMap.addRange(...entries);
   });
@@ -26,13 +26,13 @@ describe('ObservableMap', () => {
 
     // Arrange
     const listener = new Subject<INotifyInfo>();
-    const food = new Food('Carrots', 4);
+    const food = new Product(4, 'Carrots', 4);
     const added: INotifyInfo[] = [];
     listener.subscribe(notifyInfo => added.push(notifyInfo));
     foodMap.addListeners.push(listener);
 
     // Act
-    foodMap.add(food.desc, food);
+    foodMap.add(food.productName, food);
 
     // Assert
     expect(added.length).toEqual(1);
@@ -45,14 +45,14 @@ describe('ObservableMap', () => {
 
     // Arrange
     const listener = new Subject<INotifyInfo>();
-    const food1 = new Food('Carrots', 4);
-    const food2 = new Food('Peas', 5);
+    const food1 = new Product(4, 'Carrots', 4);
+    const food2 = new Product(5, 'Peas', 5);
     const added: INotifyInfo[] = [];
     listener.subscribe(notifyInfo => added.push(notifyInfo));
     foodMap.addListeners.push(listener);
 
     // Act
-    foodMap.addRange([food1.desc, food1], [food2.desc, food2]);
+    foodMap.addRange([food1.productName, food1], [food2.productName, food2]);
 
     // Assert
     expect(added.length).toEqual(2);
@@ -73,11 +73,11 @@ describe('ObservableMap', () => {
     foodMap.removeListeners.push(listener);
 
     // Act
-    foodMap.delete(food.desc);
+    foodMap.delete(food.productName);
 
     // Assert
     expect(removed.length).toEqual(1);
-    expect(removed[0].key).toBe(food.desc);
+    expect(removed[0].key).toBe(food.productName);
     expect(removed[0].currentValue).toBe(food);
     done();
   });
@@ -93,13 +93,13 @@ describe('ObservableMap', () => {
     foodMap.removeListeners.push(listener);
 
     // Act
-    foodMap.deleteRange(food1.desc, food2.desc);
+    foodMap.deleteRange(food1.productName, food2.productName);
 
     // Assert
     expect(removed.length).toEqual(2);
-    expect(removed[0].key).toBe(food1.desc);
+    expect(removed[0].key).toBe(food1.productName);
     expect(removed[0].currentValue).toBe(food1);
-    expect(removed[1].key).toBe(food2.desc);
+    expect(removed[1].key).toBe(food2.productName);
     expect(removed[1].currentValue).toBe(food2);
     done();
   });
